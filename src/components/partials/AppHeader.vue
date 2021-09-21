@@ -39,11 +39,11 @@
         </form>
         <b-nav-item-dropdown right class="preview-list">
           <template slot="button-content">
-            <div class="nav-link count-indicator">
-              <i class="mdi mdi-bell-outline"></i>
-              <span class="count">7</span>
-            </div>
-          </template>
+  <div class="nav-link count-indicator">
+    <i class="mdi mdi-bell-outline"></i>
+    <span class="count">7</span>
+  </div>
+</template>
           <b-dropdown-item class="preview-item py-2 px-0 border-bottom">
             <p class="mb-0 font-weight-medium float-left">You have 7 unread mails </p>
             <span class="badge badge-pill badge-primary float-right">View all</span>
@@ -78,11 +78,11 @@
         </b-nav-item-dropdown>
         <b-nav-item-dropdown right class="preview-list">
           <template slot="button-content">
-            <div class="nav-link count-indicator">
-              <i class="mdi mdi-email-outline"></i>
-              <span class="count bg-success">4</span>
-            </div>
-          </template>
+  <div class="nav-link count-indicator">
+    <i class="mdi mdi-email-outline"></i>
+    <span class="count bg-success">4</span>
+  </div>
+</template>
           <b-dropdown-item class="preview-item py-2 px-0 border-bottom">
             <p class="mb-0 font-weight-medium float-left">You have 4 new notifications </p>
             <span class="badge badge-pill badge-primary ml-auto">View all</span>
@@ -117,10 +117,14 @@
         </b-nav-item-dropdown>
         <b-nav-item-dropdown right class="preview-list user-dropdown">
           <template slot="button-content">
-            <div class="d-flex align-items-center">
-              <img class="img-xs rounded-circle" src="../../assets/images/faces/face8.jpg" alt="Profile image">
-            </div>
-          </template>
+  <div class="d-flex align-items-center">
+    <img
+      class="img-xs rounded-circle"
+      src="../../assets/images/faces/face8.jpg"
+      alt="Profile image"
+    />
+  </div>
+</template>
           <b-dropdown-item>
             <div class="dropdown-header text-center w-100">
               <img class="img-md rounded-circle" src="../../assets/images/faces/face8.jpg" alt="Profile image">
