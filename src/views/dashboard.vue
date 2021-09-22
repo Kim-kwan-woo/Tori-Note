@@ -12,14 +12,18 @@
     <div class='col'>
       <div class='row'>
         <div class='col'>
-          <div class='col-md-14 grid-margin stretch-card'>
+          <div class='col grid-margin stretch-card'>
             <div class='card'>
               <div class='card-body'>
                 <h4 class='card-title mb-0'>Video</h4>
+                <br/>
+                <center>
+                <iframe width="100%" height="500px" src="https://www.youtube.com/embed/078dfbYp1Rw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </center>
               </div>
             </div>
           </div>
-          <div class='col-md-14 grid-margin stretch-card'>
+          <div class='col grid-margin stretch-card'>
             <div class='card'>
               <div class='card-body'>
                 <h4 class='card-title mb-0'>Script</h4>
@@ -31,18 +35,31 @@
           <div class='card'>
             <div class='card-body d-flex flex-column'>
                 <h4 class='card-title mb-0'>Time Line</h4>
+                <br/>
+                <div class='col' style='overflow:scroll'>
+                  <div v-for="item of timeline" v-bind:key='item' class='card'>
+                    <div class='card-body'>
+                      <div class='row'>
+                      <img width='40%' height='40%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg">
+                        <br/>
+                        &nbsp;&nbsp;{{item.key_word}} <br/>
+                        &nbsp;&nbsp;{{item.time}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </div>
           </div>
         </div>
       </div>
-      <div class='col-md-100 grid-margin stretch-card'>
+      <div class='col grid-margin stretch-card'>
         <div class='card'>
           <div class='card-body d-flex flex-column'>
               <h4 class='card-title mb-0'>Summary</h4>
           </div>
         </div>
       </div>
-      <div class='col-md-100 grid-margin stretch-card'>
+      <div class='col grid-margin stretch-card'>
         <div class='card'>
           <div class='card-body d-flex flex-column'>
               <h4 class='card-title mb-0'>Keyword</h4>
@@ -69,6 +86,17 @@ import JQuery from 'jquery'
 let $ = JQuery
 export default {
   name: 'dashboard',
+  data () {
+    return {
+      timeline: [
+        { key_word: '도입', time: '00:00 - 12:00' },
+        { key_word: '비동기 통신', time: '12:00 - 15:00' },
+        { key_word: '동기 통신', time: '15:00 - 22:00' },
+        { key_word: '마무리', time: '22:00 - 35:00' },
+        { key_word: '과제', time: '35:00 - 52:20' }
+      ]
+    }
+  },
   components: {
     statsLineGraph1,
     statsLineGraph2,
