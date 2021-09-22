@@ -6,7 +6,7 @@
           <div class="card-body">
             <h3>Storage</h3><br>
               <ul v-for="(date, idx) of sortUniqueDate" :key="idx" >
-                <h5>{{ date }}</h5>
+                <h5>{{ date.substring(0, 4) }}.{{ date.substring(4, 6) }}.{{ date.substring(6, 8) }}.</h5>
                   <li v-for="item in orderItems" v-bind:key="item.name" v-if="date==item.date">
                     <i class="mdi mdi-file-pdf-box"></i>
                     {{ item.name }}

@@ -5,33 +5,32 @@
         <li class="nav-item nav-profile">
           <a href="#" class="nav-link">
             <div class="profile-image">
-              <img class="img-xs rounded-circle" src="../../assets/images/faces/face8.jpg" alt="profile image">
+              <img class="img-xs rounded-circle" src="https://avatars.githubusercontent.com/u/5829095?v=4" alt="profile image">
               <div class="dot-indicator bg-success"></div>
             </div>
             <div class="text-wrapper">
-              <p class="profile-name">Allen Moreno</p>
-              <p class="designation">Premium user</p>
+              <p class="profile-name">Kim-kwan-woo</p>
             </div>
           </a>
         </li>
         <li class="nav-item nav-category">Main Menu</li>
-        <li class="nav-item">
+        <li class="nav-item"> <!--일단 눈에 보이는 것만 바꿈-->
           <a class="nav-link" v-b-toggle="'dashboard-dropdown'">
-            <i class="menu-icon typcn typcn-document-text"></i>
-            <span class="menu-title">Dashboard</span>
+            <i class="menu-icon mdi mdi-book-open"></i>
+            <span class="menu-title">Studying</span>
             <i class="menu-arrow"></i>
           </a>
           <b-collapse id="dashboard-dropdown">
             <ul class="nav flex-column sub-menu">
               <li class="nav-item">
-                <router-link class="nav-link" to="/">Dashboard 1</router-link>
+                <router-link class="nav-link" to="/">Lecture and Script</router-link>
               </li>
             </ul>
           </b-collapse>
         </li>
         <li class="nav-item">
           <a class="nav-link" v-b-toggle="'storage-dropdown'">
-            <i class="menu-icon typcn typcn-document-text"></i>
+            <i class="menu-icon mdi mdi-arrow-down-bold-circle"></i>
             <span class="menu-title">Storage</span>
             <i class="menu-arrow"></i>
           </a>
@@ -44,70 +43,8 @@
           </b-collapse>
         </li>
         <li class="nav-item">
-          <a class="nav-link" v-b-toggle="'ui-basic'">
-            <i class="menu-icon typcn typcn-coffee"></i>
-            <span class="menu-title">Basic UI Elements</span>
-            <i class="menu-arrow"></i>
-          </a>
-          <b-collapse id="ui-basic">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item">
-                <router-link class="nav-link" to="/buttons/">Buttons</router-link>
-              </li>
-              <li class="nav-item">
-                <router-link class="nav-link" to="/dropdowns/">Dropdowns</router-link>
-              </li>
-              <li class="nav-item">
-                <router-link class="nav-link" to="/typography/">Typography</router-link>
-              </li>
-            </ul>
-          </b-collapse>
-        </li>
-         <li class="nav-item">
-          <span class="nav-link" v-b-toggle="'charts-dropdown'">
-            <i class="menu-icon typcn typcn-th-large-outline"></i>
-            <span class="menu-title">Charts</span>
-            <i class="menu-arrow"></i>
-          </span>
-          <b-collapse id="charts-dropdown">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item">
-                <router-link class="nav-link" to="/chartjs/">Chart js</router-link>
-              </li>
-            </ul>
-          </b-collapse>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" v-b-toggle="'tables'">
-            <i class="menu-icon mdi mdi-table"></i>
-            <span class="menu-title">Tables</span>
-            <i class="menu-arrow"></i>
-          </a>
-          <b-collapse id="tables">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item">
-                <router-link class="nav-link" to="/basic_table/">Basic Table</router-link>
-              </li>
-            </ul>
-          </b-collapse>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" v-b-toggle="'icons'">
-            <i class="menu-icon typcn typcn-user-outline"></i>
-            <span class="menu-title">Icons</span>
-            <i class="menu-arrow"></i>
-          </a>
-          <b-collapse id="icons">
-            <ul class="nav flex-column sub-menu">
-               <li class="nav-item">
-                <router-link class="nav-link" to="/mdiIcons/">MDI</router-link>
-              </li>
-            </ul>
-          </b-collapse>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" v-b-toggle="'auth'">
-            <i class="menu-icon typcn typcn-document-add"></i>
+            <i class="menu-icon mdi mdi-account"></i>
             <span class="menu-title">User Pages</span>
             <i class="menu-arrow"></i>
           </a>
