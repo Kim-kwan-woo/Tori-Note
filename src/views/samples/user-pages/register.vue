@@ -12,7 +12,7 @@
               <div class="auto-form-wrapper d-flex align-items-center justify-content-center flex-column">
                 <div class="nav-get-started">
                   <p>Already have an account?</p>
-                  <a class="btn get-started-btn" href="login-2.html">SIGN IN</a>
+                  <a class="btn get-started-btn" href="#/pages/login">SIGN IN</a>
                 </div>
                 <form action="#">
                   <h3 class="mr-auto">Register</h3>
@@ -48,7 +48,7 @@
                     <button class="btn btn-primary submit-btn">SIGN IN</button>
                   </div>
                   <div class="wrapper mt-5 text-gray">
-                    <p class="footer-text">Copyright © 2019 Bootstrapdash. All rights reserved.</p>
+                    <p class="footer-text">Copyright © 2021 Team KWANTORI. All rights reserved.</p>
                     <ul class="auth-footer text-gray">
                       <li>
                         <a href="#">Terms & Conditions</a>

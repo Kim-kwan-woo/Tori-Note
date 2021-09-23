@@ -2,11 +2,12 @@
 
 .auth {
 	&.auth-bg-1 {
-	  background: url("assets/images/auth/login_1.jpg");
+	  background: $footer-color;
 	  background-size: cover;
 	}
 	&.register-bg-1 {
-	  background: url("assets/images/auth/register.jpg") center center no-repeat;
+	  background: $footer-color;
+	  background: center center no-repeat;
 	  background-size: cover;
 	}
 	&.theme-one {
@@ -70,7 +71,7 @@
 		  }
 		  a {
 			font-size: 13px;
-			color: rgba(255, 255, 255, 0.4);
+			color: black;
 		  }
 		}
 		@media (max-width: $grid-breakpoints-sm) {
@@ -78,7 +79,7 @@
 		}
 	  }
 	  .footer-text {
-		color: rgba(255, 255, 255, 0.4);
+		color: rgb(129, 129, 129);
 	  }
 	}
 	&.theme-two {
@@ -199,11 +200,13 @@
 		.slide-content {
 		  width: 100%;
 		  &.bg-1 {
-			background: url("assets/images/auth/login_2.jpg") no-repeat center center;
+			background: $sidebar-gradient-color-2;
+			background: center center no-repeat;
 			background-size: cover;
 		  }
 		  &.bg-2 {
-			background: url("assets/images/auth/register_2.jpg") no-repeat center center;
+			background: $sidebar-gradient-color-2;
+			background: center center no-repeat;
 			background-size: cover;
 		  }
 		}
