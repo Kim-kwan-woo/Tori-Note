@@ -34,7 +34,10 @@ export default {
         }]
       },
       options: {
-        responsive: true,
+        legend: {
+          display: false
+        },
+        position: 'relative',
         animation: {
           animateScale: true,
           animateRotate: true
@@ -50,6 +53,5 @@ export default {
 
 <style scoped lang="scss">
   .pie-chart {
-
   }
 </style>
