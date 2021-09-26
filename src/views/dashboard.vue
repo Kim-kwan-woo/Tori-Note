@@ -7,7 +7,21 @@
             <div class='card'>
               <div class='card-body'>
                 <h4 class='card-title mb-0'>Video</h4><br/>
-                <center><iframe width="100%" height="400px" src="https://www.youtube.com/embed/2yjZGAGmmPA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+                <center>
+                  <vue-webrtc ref="webrtc"
+                      width="100%"
+                      cameraHeight="300px"
+                      enableVideo="flase"
+                      :roomId="roomId"
+                      v-on:joined-room="logEvent"
+                      v-on:left-room="logEvent"
+                      v-on:opened-room="logEvent"
+                      v-on:share-started="logEvent"
+                      v-on:share-stopped="logEvent"
+                      @error="onError" />
+                </center>
+                <div v-if="share" style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="onLeave">Leave Screen</b-button></div>
+                <div v-else style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="onShareScreen">Share Screen</b-button></div>
               </div>
             </div>
           </div>
@@ -91,6 +105,11 @@ import realtimeStatistics from '../components/charts/dashboard_1/realtime-statis
 import usersDoughnutChart from '../components/charts/dashboard_1/usersDoughnutChart'
 import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
+import Vue from 'vue'
+import WebRTC from 'vue-webrtc'
+
+Vue.use(WebRTC)
+
 let $ = JQuery
 export default {
   name: 'dashboard',
@@ -104,7 +123,10 @@ export default {
         {key_word: '스택', time: '15:00 - 22:00', summary: '스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행됩니다.'},
         {key_word: '마무리', time: '22:00 - 35:00', summary: '오늘 수업은 여기서 마무리하겠습니다.'},
         {key_word: '과제', time: '35:00 - 52:20', summary: '다음주까지 나만의 노트 정리하기 과제입니다.'}
-      ]
+      ],
+      img: null,
+      roomId: 'public-room-v2',
+      share: false
     }
   },
   components: {
@@ -124,6 +146,26 @@ export default {
   methods: {
     toggleProBanner: function () {
       $('body').toggleClass('pro-banner-collapse')
+    },
+    onCapture () {
+      this.img = this.$refs.webrtc.capture()
+    },
+    onJoin () {
+      this.$refs.webrtc.join()
+    },
+    onLeave () {
+      this.share = false
+      this.$refs.webrtc.leave()
+    },
+    onShareScreen () {
+      this.share = true
+      this.img = this.$refs.webrtc.shareScreen()
+    },
+    onError (error, stream) {
+      console.log('On Error Event', error, stream)
+    },
+    logEvent (event) {
+      console.log('Event : ', event)
     }
   }
 }
@@ -134,13 +176,11 @@ export default {
 .type1::-webkit-scrollbar{ width: 6px; }
 .type1::-webkit-scrollbar-thumb{ height: 7%; background-color: rgb(223, 223, 223); border-radius: 15px; }
 .type1::-webkit-scrollbar-track{ background-color: white; }
-
 .card1 {
     border: solid 1px rgb(223, 223, 223); margin-bottom: 8px;
     .card1-title { color: black; }
     .card1-header { background: black; }
 }
-
 .left-box { width:55%; height:90%; float:left; box-sizing:border-box; }
 .right-box { width:45%; height:90%; float:right; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; text-align:left; }
 </style>
