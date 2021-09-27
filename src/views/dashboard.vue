@@ -92,7 +92,6 @@
     </div>
   </section>
 </template>
-
 <script lang='js'>
 import statsLineGraph1 from '../components/charts/dashboard_1/stats-line-graph-1'
 import statsLineGraph2 from '../components/charts/dashboard_1/stats-line-graph-2'
