@@ -6,13 +6,14 @@
           <div class='col grid-margin stretch-card'>
             <div class='card'>
               <div class='card-body'>
-                <h4 class='card-title mb-0'>Video</h4><br/>
+                <h4 class='card-title mb-0'>Video</h4>
+                <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
                 <video ref="videoElement" controls autoplay></video><br/>
-                <button type="button" class="btn btn-primary" @click="ShareScreen">Share</button>
                 <button type="button" class="btn btn-primary" @click="BtnRecordClicked">Start</button>
                 <button type="button" class="btn btn-primary" @click="BtnStopClicked">Stop</button>
                 <button type="button" class="btn btn-primary" @click="CaptureScreen">Capture Photo</button><br/>
-                <a id="downloadLink" download="mediarecorder.webm" name="mediarecorder.webm" href></a><br/>
+                <a id="downloadLink" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
+                <a id="screenshotLink" download="drawImage.jpeg" name="drawImage.jpeg" href></a><br/>
                 <canvas></canvas>
               </div>
             </div>
@@ -172,7 +173,7 @@ export default {
         var videoURL = window.URL.createObjectURL(blob)
 
         document.querySelector('a#downloadLink').href = videoURL
-        document.querySelector('a#downloadLink').innerHTML = 'Download video file'
+        document.querySelector('a#downloadLink').innerHTML = 'Download mp3 file'
 
         var rand = Math.floor(Math.random() * 10000000)
         var name = 'audio_' + rand + '.mp3'
@@ -195,15 +196,19 @@ export default {
 
       canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
 
+      canvas.toBlob(function (blob) {}, 'image/jpeg', 0.95)
       canvas.toBlob(function (blob) {
-        var newImg = document.createElement('img')
-        var url = URL.createObjectURL(blob)
+        var screenURL = window.URL.createObjectURL(blob)
 
-        newImg.onload = function () {
-          URL.revokeObjectURL(url)
-        }
-        newImg.src = url
-      }, 'image/jpeg', 0.95)
+        document.querySelector('a#screenshotLink').href = screenURL
+        document.querySelector('a#screenshotLink').innerHTML = 'Download jpeg file'
+
+        var rand = Math.floor(Math.random() * 10000000)
+        var name = 'screen_' + rand + '.jpeg'
+
+        document.querySelector('a#screenshotLink').setAttribute('download', name)
+        document.querySelector('a#screenshotLink').setAttribute('name', name)
+      })
     }
   }
 }
@@ -222,4 +227,5 @@ export default {
 .left-box { width:55%; height:90%; float:left; box-sizing:border-box; }
 .right-box { width:45%; height:90%; float:right; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; text-align:left; }
 video { background:#222; width:100%; height:400px; }
+canvas { display:none; }
 </style>
