@@ -7,21 +7,13 @@
             <div class='card'>
               <div class='card-body'>
                 <h4 class='card-title mb-0'>Video</h4><br/>
-                <center>
-                  <vue-webrtc ref="webrtc"
-                      width="100%"
-                      cameraHeight="300px"
-                      enableVideo="flase"
-                      :roomId="roomId"
-                      v-on:joined-room="logEvent"
-                      v-on:left-room="logEvent"
-                      v-on:opened-room="logEvent"
-                      v-on:share-started="logEvent"
-                      v-on:share-stopped="logEvent"
-                      @error="onError" />
-                </center>
-                <div v-if="share" style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="onLeave">Leave Screen</b-button></div>
-                <div v-else style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="onShareScreen">Share Screen</b-button></div>
+                <video ref="videoElement" controls autoplay></video><br/>
+                <button type="button" class="btn btn-primary" @click="ShareScreen">Share</button>
+                <button type="button" class="btn btn-primary" @click="BtnRecordClicked">Start</button>
+                <button type="button" class="btn btn-primary" @click="BtnStopClicked">Stop</button>
+                <button type="button" class="btn btn-primary" @click="CaptureScreen">Capture Photo</button><br/>
+                <a id="downloadLink" download="mediarecorder.webm" name="mediarecorder.webm" href></a><br/>
+                <canvas></canvas>
               </div>
             </div>
           </div>
@@ -105,10 +97,6 @@ import realtimeStatistics from '../components/charts/dashboard_1/realtime-statis
 import usersDoughnutChart from '../components/charts/dashboard_1/usersDoughnutChart'
 import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
-import Vue from 'vue'
-import WebRTC from 'vue-webrtc'
-
-Vue.use(WebRTC)
 
 let $ = JQuery
 export default {
@@ -124,9 +112,9 @@ export default {
         {key_word: '마무리', time: '22:00 - 35:00', summary: '오늘 수업은 여기서 마무리하겠습니다.'},
         {key_word: '과제', time: '35:00 - 52:20', summary: '다음주까지 나만의 노트 정리하기 과제입니다.'}
       ],
-      img: null,
-      roomId: 'public-room-v2',
-      share: false
+      mediaRecorder: {},
+      chunks: [ ],
+      localStream: {}
     }
   },
   components: {
@@ -147,25 +135,75 @@ export default {
     toggleProBanner: function () {
       $('body').toggleClass('pro-banner-collapse')
     },
-    onCapture () {
-      this.img = this.$refs.webrtc.capture()
+    ShareScreen () {
+      if (navigator.mediaDevices.getDisplayMedia && window.MediaRecorder !== undefined) {
+        navigator.mediaDevices.getDisplayMedia({video: true, audio: true}).then(function (screenStream) {
+          this.localstream = screenStream
+
+          this.localstream.getTracks().forEach(function (track) {})
+          document.querySelector('video').srcObject = this.localstream
+          document.querySelector('video').play()
+          document.querySelector('video').muted = true
+
+          try {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext
+            window.audioContext = new AudioContext()
+          } catch (e) {
+          }
+        }.bind(this))
+      }
     },
-    onJoin () {
-      this.$refs.webrtc.join()
+    BtnRecordClicked () {
+      if (typeof MediaRecorder.isTypeSupported === 'function') {
+        var options = { mimeType: 'audio/webm;codecs=opus' }
+        this.mediaRecorder = new MediaRecorder(this.localstream, options)
+      } else {
+        this.mediaRecorder = new MediaRecorder(this.localstream)
+      }
+
+      this.mediaRecorder.ondataavailable = function (e) {
+        this.chunks.push(e.data)
+      }.bind(this)
+
+      this.mediaRecorder.onstop = function () {
+        var blob = new Blob(this.chunks, { type: 'audio/mp3' })
+        this.chunks = []
+
+        var videoURL = window.URL.createObjectURL(blob)
+
+        document.querySelector('a#downloadLink').href = videoURL
+        document.querySelector('a#downloadLink').innerHTML = 'Download video file'
+
+        var rand = Math.floor(Math.random() * 10000000)
+        var name = 'audio_' + rand + '.mp3'
+
+        document.querySelector('a#downloadLink').setAttribute('download', name)
+        document.querySelector('a#downloadLink').setAttribute('name', name)
+      }.bind(this)
+
+      this.mediaRecorder.start(10)
     },
-    onLeave () {
-      this.share = false
-      this.$refs.webrtc.leave()
+    BtnStopClicked () {
+      this.mediaRecorder.stop()
     },
-    onShareScreen () {
-      this.share = true
-      this.img = this.$refs.webrtc.shareScreen()
-    },
-    onError (error, stream) {
-      console.log('On Error Event', error, stream)
-    },
-    logEvent (event) {
-      console.log('Event : ', event)
+    CaptureScreen () {
+      const video = document.querySelector('video')
+      const canvas = window.canvas = document.querySelector('canvas')
+
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
+
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
+
+      canvas.toBlob(function (blob) {
+        var newImg = document.createElement('img')
+        var url = URL.createObjectURL(blob)
+
+        newImg.onload = function () {
+          URL.revokeObjectURL(url)
+        }
+        newImg.src = url
+      }, 'image/jpeg', 0.95)
     }
   }
 }
@@ -183,4 +221,5 @@ export default {
 }
 .left-box { width:55%; height:90%; float:left; box-sizing:border-box; }
 .right-box { width:45%; height:90%; float:right; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; text-align:left; }
+video { background:#222; width:100%; height:400px; }
 </style>
