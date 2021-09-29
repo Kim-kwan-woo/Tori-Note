@@ -9,11 +9,9 @@
                 <h4 class='card-title mb-0'>Video</h4>
                 <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
                 <video ref="videoElement" controls autoplay></video><br/>
-                <button type="button" class="btn btn-primary" @click="BtnRecordClicked">Start</button>
-                <button type="button" class="btn btn-primary" @click="BtnStopClicked">Stop</button>
-                <button type="button" class="btn btn-primary" @click="CaptureScreen">Capture Photo</button><br/>
-                <a id="downloadLink" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
-                <a id="screenshotLink" download="drawImage.jpeg" name="drawImage.jpeg" href></a><br/>
+                <button type="button" id="Start" class="btn btn-primary" @click="recordPer10s">Start</button>
+                <a id="downloadLink" style="display:none;" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
+                <a id="screenshotLink" style="display:none;" download="drawImage.jpeg" name="drawImage.jpeg" href></a><br/>
                 <canvas></canvas>
               </div>
             </div>
@@ -166,6 +164,10 @@ export default {
         this.chunks.push(e.data)
       }.bind(this)
 
+      setTimeout(function () {
+        this.BtnStopClicked()
+      }.bind(this), 10000)
+
       this.mediaRecorder.onstop = function () {
         var blob = new Blob(this.chunks, { type: 'audio/mp3' })
         this.chunks = []
@@ -209,6 +211,21 @@ export default {
         document.querySelector('a#screenshotLink').setAttribute('download', name)
         document.querySelector('a#screenshotLink').setAttribute('name', name)
       })
+    },
+    recordPer10s () {
+      this.CaptureScreen()
+      this.BtnRecordClicked()
+      setTimeout(function () {
+        new Promise((resolve, reject) => {
+          document.querySelector('a#downloadLink').click()
+          document.querySelector('a#screenshotLink').click()
+          resolve()
+        })
+          .then(() => {
+            this.CaptureScreen()
+            this.BtnRecordClicked()
+          })
+      }.bind(this), 10000)
     }
   }
 }
