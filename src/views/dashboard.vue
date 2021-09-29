@@ -22,6 +22,7 @@
                 </center>
                 <div v-if="share" style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="onLeave">Leave Screen</b-button></div>
                 <div v-else style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="onShareScreen">Share Screen</b-button></div>
+                <h2>{{recordedVideoUrl}}</h2>
               </div>
             </div>
           </div>
@@ -125,7 +126,10 @@ export default {
       ],
       img: null,
       roomId: 'public-room-v2',
-      share: false
+      share: false,
+      mediaRecorder: null,
+      chunks: [],
+      recordedVideoUrl: 'gkdl'
     }
   },
   components: {
@@ -159,6 +163,14 @@ export default {
     onShareScreen () {
       this.share = true
       this.img = this.$refs.webrtc.shareScreen()
+      this.mediaRecorder = MediaRecorder(this.img, {mimeType: 'video/webm;codecs=vp8'})
+      this.mediaRecorder.start()
+      this.mediaRecorder.ondataavailable = (e) => {
+        this.chunks.push(e.data)
+      }
+      this.mediaRecorder.stop()
+      const blob = new Blob(this.chunks, { mimeType: 'video/webm;codecs=vp8' })
+      this.recordedVideoUrl = URL.createObjectURL(blob)
     },
     onError (error, stream) {
       console.log('On Error Event', error, stream)
