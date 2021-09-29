@@ -213,19 +213,7 @@ export default {
       })
     },
     recordPer10s () {
-      this.CaptureScreen()
-      this.BtnRecordClicked()
-      setTimeout(function () {
-        new Promise((resolve, reject) => {
-          document.querySelector('a#downloadLink').click()
-          document.querySelector('a#screenshotLink').click()
-          resolve()
-        })
-          .then(() => {
-            this.CaptureScreen()
-            this.BtnRecordClicked()
-          })
-      }.bind(this), 10000)
+
     }
   }
 }
