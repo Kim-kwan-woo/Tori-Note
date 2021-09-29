@@ -81,7 +81,6 @@
     </div>
   </section>
 </template>
-
 <script lang='js'>
 import statsLineGraph1 from '../components/charts/dashboard_1/stats-line-graph-1'
 import statsLineGraph2 from '../components/charts/dashboard_1/stats-line-graph-2'
@@ -112,7 +111,7 @@ export default {
         {key_word: '과제', time: '35:00 - 52:20', summary: '다음주까지 나만의 노트 정리하기 과제입니다.'}
       ],
       mediaRecorder: {},
-      chunks: [ ],
+      chunks: [],
       localStream: {}
     }
   },
@@ -152,6 +151,11 @@ export default {
         }.bind(this))
       }
     },
+    setTimeoutPromise (ms) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(), ms)
+      })
+    },
     BtnRecordClicked () {
       if (typeof MediaRecorder.isTypeSupported === 'function') {
         var options = { mimeType: 'audio/webm;codecs=opus' }
@@ -160,18 +164,18 @@ export default {
         this.mediaRecorder = new MediaRecorder(this.localstream)
       }
 
+      this.mediaRecorder.start(10)
+      console.log('1')
       this.mediaRecorder.ondataavailable = function (e) {
         this.chunks.push(e.data)
       }.bind(this)
-
-      setTimeout(function () {
-        this.BtnStopClicked()
-      }.bind(this), 10000)
-
+    },
+    BtnStopClicked () {
+      this.mediaRecorder.stop()
+      console.log('2')
       this.mediaRecorder.onstop = function () {
         var blob = new Blob(this.chunks, { type: 'audio/mp3' })
         this.chunks = []
-
         var videoURL = window.URL.createObjectURL(blob)
 
         document.querySelector('a#downloadLink').href = videoURL
@@ -182,12 +186,8 @@ export default {
 
         document.querySelector('a#downloadLink').setAttribute('download', name)
         document.querySelector('a#downloadLink').setAttribute('name', name)
+        console.log('3')
       }.bind(this)
-
-      this.mediaRecorder.start(10)
-    },
-    BtnStopClicked () {
-      this.mediaRecorder.stop()
     },
     CaptureScreen () {
       const video = document.querySelector('video')
@@ -212,8 +212,15 @@ export default {
         document.querySelector('a#screenshotLink').setAttribute('name', name)
       })
     },
-    recordPer10s () {
-
+    async recordPer10s () {
+      this.CaptureScreen()
+      this.BtnRecordClicked()
+      await this.setTimeoutPromise(10000)
+      this.BtnStopClicked()
+      document.querySelector('a#downloadLink').click()
+      document.querySelector('a#screenshotLink').click()
+      await this.setTimeoutPromise(100)
+      this.recordPer10s()
     }
   }
 }
