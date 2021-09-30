@@ -173,21 +173,24 @@ export default {
     BtnStopClicked () {
       this.mediaRecorder.stop()
       console.log('2')
-      this.mediaRecorder.onstop = function () {
-        var blob = new Blob(this.chunks, { type: 'audio/mp3' })
-        this.chunks = []
-        var videoURL = window.URL.createObjectURL(blob)
+      return new Promise((resolve, reject) => {
+        this.mediaRecorder.onstop = function () {
+          var blob = new Blob(this.chunks, { type: 'audio/mp3' })
+          this.chunks = []
+          var videoURL = window.URL.createObjectURL(blob)
 
-        document.querySelector('a#downloadLink').href = videoURL
-        document.querySelector('a#downloadLink').innerHTML = 'Download mp3 file'
+          document.querySelector('a#downloadLink').href = videoURL
+          document.querySelector('a#downloadLink').innerHTML = 'Download mp3 file'
 
-        var rand = Math.floor(Math.random() * 10000000)
-        var name = 'audio_' + rand + '.mp3'
+          var rand = Math.floor(Math.random() * 10000000)
+          var name = 'audio_' + rand + '.mp3'
 
-        document.querySelector('a#downloadLink').setAttribute('download', name)
-        document.querySelector('a#downloadLink').setAttribute('name', name)
-        console.log('3')
-      }.bind(this)
+          document.querySelector('a#downloadLink').setAttribute('download', name)
+          document.querySelector('a#downloadLink').setAttribute('name', name)
+          console.log('3')
+          resolve()
+        }.bind(this)
+      })
     },
     CaptureScreen () {
       const video = document.querySelector('video')
@@ -216,10 +219,9 @@ export default {
       this.CaptureScreen()
       this.BtnRecordClicked()
       await this.setTimeoutPromise(10000)
-      this.BtnStopClicked()
+      await this.BtnStopClicked()
       document.querySelector('a#downloadLink').click()
       document.querySelector('a#screenshotLink').click()
-      await this.setTimeoutPromise(100)
       this.recordPer10s()
     }
   }
