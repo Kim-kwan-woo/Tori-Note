@@ -9,7 +9,7 @@
                 <h4 class='card-title mb-0'>Video</h4>
                 <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
                 <video ref="videoElement" controls autoplay></video><br/>
-                <button type="button" id="Start" class="btn btn-primary" @click="recordPer10s">Start</button>
+                <button type="button" id="Start" class="btn btn-primary" @click="AllrecordPer10s">Start</button>
                 <a id="downloadLink" style="display:none;" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
                 <a id="screenshotLink" style="display:none;" download="drawImage.jpeg" name="drawImage.jpeg" href></a><br/>
                 <canvas></canvas>
@@ -215,14 +215,31 @@ export default {
         document.querySelector('a#screenshotLink').setAttribute('name', name)
       })
     },
-    async recordPer10s () {
+    async OddrecordPer10s () {
       this.CaptureScreen()
       this.BtnRecordClicked()
       await this.setTimeoutPromise(10000)
       await this.BtnStopClicked()
       document.querySelector('a#downloadLink').click()
       document.querySelector('a#screenshotLink').click()
-      this.recordPer10s()
+      this.OddrecordPer10s()
+    },
+    async EvenrecordPer10s () {
+      this.CaptureScreen()
+      this.BtnRecordClicked()
+      await this.setTimeoutPromise(10000)
+      await this.BtnStopClicked()
+      document.querySelector('a#downloadLink').click()
+      document.querySelector('a#screenshotLink').click()
+      this.EvenrecordPer10s()
+    },
+    AllrecordPer10s () {
+      let video = document.createElement('video')
+      if (video.currentTime % 10 === 0 && video.currentTime % 2 !== 0) {
+        this.OddrecordPer10s()
+      } else if (video.currentTime % 10 === 0 && video.currentTime % 2 === 0) {
+        this.EvenrecordPer10s()
+      }
     }
   }
 }
