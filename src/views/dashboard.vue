@@ -7,12 +7,9 @@
             <div class='card'>
               <div class='card-body'>
                 <h4 class='card-title mb-0'>Video</h4>
+                <div style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"><i class="mdi mdi-step-forward"></i>Start</b-button></div>
                 <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
                 <video ref="videoElement" controls autoplay></video><br/>
-                <button type="button" id="Start" class="btn btn-primary" @click="AllrecordPer10s">Start</button>
-                <a id="downloadLink" style="display:none;" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
-                <a id="screenshotLink" style="display:none;" download="drawImage.jpeg" name="drawImage.jpeg" href></a><br/>
-                <canvas></canvas>
               </div>
             </div>
           </div>
@@ -76,6 +73,11 @@
           <div class='right-box'>
             <h4 v-for="(item,i) of timeline" v-bind:key='item' v-if="i < 3">#{{item.key_word}}&nbsp;&nbsp;</h4>
           </div>
+          <a id="downloadLink" style="display:none;" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
+          <a id="downloadLink_Even" style="display:none;" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
+          <a id="screenshotLink" style="display:none;" download="drawImage.jpeg" name="drawImage.jpeg" href></a><br/>
+          <a id="screenshotLink_Even" style="display:none;" download="drawImage.jpeg" name="drawImage.jpeg" href></a><br/>
+          <canvas></canvas>
         </div>
       </div>
     </div>
@@ -95,7 +97,6 @@ import realtimeStatistics from '../components/charts/dashboard_1/realtime-statis
 import usersDoughnutChart from '../components/charts/dashboard_1/usersDoughnutChart'
 import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
-
 let $ = JQuery
 export default {
   name: 'dashboard',
@@ -110,9 +111,15 @@ export default {
         {key_word: '마무리', time: '22:00 - 35:00', summary: '오늘 수업은 여기서 마무리하겠습니다.'},
         {key_word: '과제', time: '35:00 - 52:20', summary: '다음주까지 나만의 노트 정리하기 과제입니다.'}
       ],
+      localStream: {},
       mediaRecorder: {},
       chunks: [],
-      localStream: {}
+      startTime: {},
+      endTime: {},
+      mediaRecorder_Even: {},
+      chunks_Even: [],
+      startTime_Even: {},
+      endTime_Even: {}
     }
   },
   components: {
@@ -137,12 +144,10 @@ export default {
       if (navigator.mediaDevices.getDisplayMedia && window.MediaRecorder !== undefined) {
         navigator.mediaDevices.getDisplayMedia({video: true, audio: true}).then(function (screenStream) {
           this.localstream = screenStream
-
           this.localstream.getTracks().forEach(function (track) {})
           document.querySelector('video').srcObject = this.localstream
           document.querySelector('video').play()
           document.querySelector('video').muted = true
-
           try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext
             window.audioContext = new AudioContext()
@@ -157,13 +162,14 @@ export default {
       })
     },
     BtnRecordClicked () {
+      var date = new Date()
+      this.startTime = date.getHours() + '_' + date.getMinutes() + '_' + date.getSeconds()
       if (typeof MediaRecorder.isTypeSupported === 'function') {
         var options = { mimeType: 'audio/webm;codecs=opus' }
         this.mediaRecorder = new MediaRecorder(this.localstream, options)
       } else {
         this.mediaRecorder = new MediaRecorder(this.localstream)
       }
-
       this.mediaRecorder.start(10)
       console.log('1')
       this.mediaRecorder.ondataavailable = function (e) {
@@ -171,6 +177,8 @@ export default {
       }.bind(this)
     },
     BtnStopClicked () {
+      var date = new Date()
+      this.endTime = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
       this.mediaRecorder.stop()
       console.log('2')
       return new Promise((resolve, reject) => {
@@ -178,13 +186,10 @@ export default {
           var blob = new Blob(this.chunks, { type: 'audio/mp3' })
           this.chunks = []
           var videoURL = window.URL.createObjectURL(blob)
-
           document.querySelector('a#downloadLink').href = videoURL
           document.querySelector('a#downloadLink').innerHTML = 'Download mp3 file'
-
-          var rand = Math.floor(Math.random() * 10000000)
+          var rand = this.startTime + '-' + this.endTime
           var name = 'audio_' + rand + '.mp3'
-
           document.querySelector('a#downloadLink').setAttribute('download', name)
           document.querySelector('a#downloadLink').setAttribute('name', name)
           console.log('3')
@@ -192,27 +197,74 @@ export default {
         }.bind(this)
       })
     },
+    BtnRecordClicked_Even () {
+      var date = new Date()
+      this.startTime_Even = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+      if (typeof MediaRecorder.isTypeSupported === 'function') {
+        var options = { mimeType: 'audio/webm;codecs=opus' }
+        this.mediaRecorder_Even = new MediaRecorder(this.localstream, options)
+      } else {
+        this.mediaRecorder_Even = new MediaRecorder(this.localstream)
+      }
+      this.mediaRecorder_Even.start(10)
+      console.log('1Even')
+      this.mediaRecorder_Even.ondataavailable = function (e) {
+        this.chunks_Even.push(e.data)
+      }.bind(this)
+    },
+    BtnStopClicked_Even () {
+      var date = new Date()
+      this.endTime_Even = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+      this.mediaRecorder_Even.stop()
+      console.log('2Even')
+      return new Promise((resolve, reject) => {
+        this.mediaRecorder_Even.onstop = function () {
+          var blob = new Blob(this.chunks_Even, { type: 'audio/mp3' })
+          this.chunks_Even = []
+          var videoURL = window.URL.createObjectURL(blob)
+          document.querySelector('a#downloadLink_Even').href = videoURL
+          document.querySelector('a#downloadLink_Even').innerHTML = 'Download mp3 file'
+          var rand = this.startTime_Even + '-' + this.endTime_Even
+          var name = 'audio_' + rand + '.mp3'
+          document.querySelector('a#downloadLink_Even').setAttribute('download', name)
+          document.querySelector('a#downloadLink_Even').setAttribute('name', name)
+          console.log('3Even')
+          resolve()
+        }.bind(this)
+      })
+    },
     CaptureScreen () {
       const video = document.querySelector('video')
       const canvas = window.canvas = document.querySelector('canvas')
-
       canvas.width = video.videoWidth
       canvas.height = video.videoHeight
-
       canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
-
       canvas.toBlob(function (blob) {}, 'image/jpeg', 0.95)
       canvas.toBlob(function (blob) {
         var screenURL = window.URL.createObjectURL(blob)
-
         document.querySelector('a#screenshotLink').href = screenURL
         document.querySelector('a#screenshotLink').innerHTML = 'Download jpeg file'
-
         var rand = Math.floor(Math.random() * 10000000)
         var name = 'screen_' + rand + '.jpeg'
-
         document.querySelector('a#screenshotLink').setAttribute('download', name)
         document.querySelector('a#screenshotLink').setAttribute('name', name)
+      })
+    },
+    CaptureScreenEven () {
+      const video = document.querySelector('video')
+      const canvas = window.canvas = document.querySelector('canvas')
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
+      canvas.toBlob(function (blob) {}, 'image/jpeg', 0.95)
+      canvas.toBlob(function (blob) {
+        var screenURL = window.URL.createObjectURL(blob)
+        document.querySelector('a#screenshotLink_Even').href = screenURL
+        document.querySelector('a#screenshotLink_Even').innerHTML = 'Download jpeg file'
+        var rand = Math.floor(Math.random() * 10000000)
+        var name = 'screen_' + rand + '.jpeg'
+        document.querySelector('a#screenshotLink_Even').setAttribute('download', name)
+        document.querySelector('a#screenshotLink_Even').setAttribute('name', name)
       })
     },
     async OddrecordPer10s () {
@@ -222,24 +274,23 @@ export default {
       await this.BtnStopClicked()
       document.querySelector('a#downloadLink').click()
       document.querySelector('a#screenshotLink').click()
-      this.OddrecordPer10s()
+      console.log('odd')
     },
     async EvenrecordPer10s () {
-      this.CaptureScreen()
-      this.BtnRecordClicked()
+      this.CaptureScreenEven()
+      this.BtnRecordClicked_Even()
       await this.setTimeoutPromise(10000)
-      await this.BtnStopClicked()
-      document.querySelector('a#downloadLink').click()
-      document.querySelector('a#screenshotLink').click()
-      this.EvenrecordPer10s()
+      await this.BtnStopClicked_Even()
+      document.querySelector('a#downloadLink_Even').click()
+      document.querySelector('a#screenshotLink_Even').click()
+      console.log('even')
     },
-    AllrecordPer10s () {
-      let video = document.createElement('video')
-      if (video.currentTime % 10 === 0 && video.currentTime % 2 !== 0) {
-        this.OddrecordPer10s()
-      } else if (video.currentTime % 10 === 0 && video.currentTime % 2 === 0) {
-        this.EvenrecordPer10s()
-      }
+    async AllrecordPer10s () {
+      this.OddrecordPer10s()
+      await this.setTimeoutPromise(9770)
+      this.EvenrecordPer10s()
+      await this.setTimeoutPromise(9770)
+      this.AllrecordPer10s()
     }
   }
 }
