@@ -175,7 +175,7 @@ export default {
       console.log('2')
       return new Promise((resolve, reject) => {
         this.mediaRecorder.onstop = function () {
-          var blob = new Blob(this.chunks, { type: 'audio/mp3' })
+          var blob = new Blob(this.chunks, { type: 'audio/webm' })
           this.chunks = []
           var videoURL = window.URL.createObjectURL(blob)
 
@@ -183,7 +183,7 @@ export default {
           document.querySelector('a#downloadLink').innerHTML = 'Download mp3 file'
 
           var rand = Math.floor(Math.random() * 10000000)
-          var name = 'audio_' + rand + '.mp3'
+          var name = 'audio_' + rand + '.webm'
 
           document.querySelector('a#downloadLink').setAttribute('download', name)
           document.querySelector('a#downloadLink').setAttribute('name', name)
@@ -218,7 +218,7 @@ export default {
     async recordPer10s () {
       this.CaptureScreen()
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(10000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked()
       document.querySelector('a#downloadLink').click()
       document.querySelector('a#screenshotLink').click()
