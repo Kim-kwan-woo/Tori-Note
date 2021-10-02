@@ -97,6 +97,7 @@ import realtimeStatistics from '../components/charts/dashboard_1/realtime-statis
 import usersDoughnutChart from '../components/charts/dashboard_1/usersDoughnutChart'
 import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
+
 let $ = JQuery
 export default {
   name: 'dashboard',
