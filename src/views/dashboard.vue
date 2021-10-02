@@ -239,6 +239,8 @@ export default {
       })
     },
     CaptureScreen () {
+      var date = new Date()
+      var startTime = date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds()
       const video = document.querySelector('video')
       const canvas = window.canvas = document.querySelector('canvas')
       canvas.width = video.videoWidth
@@ -253,9 +255,12 @@ export default {
         var name = 'screen_' + rand + '.jpeg'
         document.querySelector('a#screenshotLink').setAttribute('download', name)
         document.querySelector('a#screenshotLink').setAttribute('name', name)
-      })
+        this.addimg(screenURL, startTime)
+      }.bind(this))
     },
     CaptureScreenEven () {
+      var date = new Date()
+      var startTime = date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds()
       const video = document.querySelector('video')
       const canvas = window.canvas = document.querySelector('canvas')
       canvas.width = video.videoWidth
@@ -270,7 +275,8 @@ export default {
         var name = 'screen_' + rand + '.jpeg'
         document.querySelector('a#screenshotLink_Even').setAttribute('download', name)
         document.querySelector('a#screenshotLink_Even').setAttribute('name', name)
-      })
+        this.addimg(screenURL, startTime)
+      }.bind(this))
     },
     async OddrecordPer10s () {
       this.CaptureScreen()
@@ -296,6 +302,14 @@ export default {
       this.EvenrecordPer10s()
       await this.setTimeoutPromise(58770)
       this.AllrecordPer10s()
+    },
+    addimg (title, startTime) {
+      if (title) {
+        this.$http.post('http://localhost:3000/img', {
+          title: title,
+          startTime: startTime
+        })
+      }
     }
   }
 }
