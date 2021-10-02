@@ -10,13 +10,14 @@
                 <div style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"><i class="mdi mdi-step-forward"></i>Start</b-button></div>
                 <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
                 <video ref="videoElement" controls autoplay></video><br/>
+                <canvas></canvas>
               </div>
             </div>
           </div>
         <div class='col grid-margin stretch-card'>
           <div class='card'>
             <div class='card-body'>
-              <h4 class='card-title mb-0'>Script</h4><br/>
+              <h4 class='card-title mb-0' id='script'>Script</h4><br/>
               <p>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</p>
             </div>
           </div>
@@ -68,7 +69,7 @@
         <div class='col card-body'>
           <h4 class='card-title mb-0'>Keyword</h4><br/>
           <div class='card-body left-box'>
-            <pie-chart height="200" style='position:relative; left:23%;'></pie-chart>
+            <pie-chart height="200" style='position:relative; left:23%; z-index:100;'></pie-chart>
           </div>
           <div class='right-box'>
             <h4 v-for="(item,i) of timeline" v-bind:key='item' v-if="i < 3">#{{item.key_word}}&nbsp;&nbsp;</h4>
@@ -77,7 +78,6 @@
           <a id="downloadLink_Even" style="display:none;" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
           <a id="screenshotLink" style="display:none;" download="drawImage.jpeg" name="drawImage.jpeg" href></a><br/>
           <a id="screenshotLink_Even" style="display:none;" download="drawImage.jpeg" name="drawImage.jpeg" href></a><br/>
-          <canvas></canvas>
         </div>
       </div>
     </div>
@@ -165,7 +165,9 @@ export default {
       var date = new Date()
       this.startTime = date.getHours() + '_' + date.getMinutes() + '_' + date.getSeconds()
       if (typeof MediaRecorder.isTypeSupported === 'function') {
-        var options = { mimeType: 'audio/webm;codecs=opus' }
+        var options = {
+          bitsPerSecond: 70000,
+          mimeType: 'audio/webm;codecs=opus' }
         this.mediaRecorder = new MediaRecorder(this.localstream, options)
       } else {
         this.mediaRecorder = new MediaRecorder(this.localstream)
@@ -183,13 +185,13 @@ export default {
       console.log('2')
       return new Promise((resolve, reject) => {
         this.mediaRecorder.onstop = function () {
-          var blob = new Blob(this.chunks, { type: 'audio/mp3' })
+          var blob = new Blob(this.chunks, { type: 'audio/webm' })
           this.chunks = []
           var videoURL = window.URL.createObjectURL(blob)
           document.querySelector('a#downloadLink').href = videoURL
           document.querySelector('a#downloadLink').innerHTML = 'Download mp3 file'
           var rand = this.startTime + '-' + this.endTime
-          var name = 'audio_' + rand + '.mp3'
+          var name = 'audio_' + rand + '.webm'
           document.querySelector('a#downloadLink').setAttribute('download', name)
           document.querySelector('a#downloadLink').setAttribute('name', name)
           console.log('3')
@@ -201,7 +203,9 @@ export default {
       var date = new Date()
       this.startTime_Even = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
       if (typeof MediaRecorder.isTypeSupported === 'function') {
-        var options = { mimeType: 'audio/webm;codecs=opus' }
+        var options = {
+          bitsPerSecond: 70000,
+          mimeType: 'audio/webm;codecs=opus' }
         this.mediaRecorder_Even = new MediaRecorder(this.localstream, options)
       } else {
         this.mediaRecorder_Even = new MediaRecorder(this.localstream)
@@ -219,13 +223,13 @@ export default {
       console.log('2Even')
       return new Promise((resolve, reject) => {
         this.mediaRecorder_Even.onstop = function () {
-          var blob = new Blob(this.chunks_Even, { type: 'audio/mp3' })
+          var blob = new Blob(this.chunks_Even, { type: 'audio/webm' })
           this.chunks_Even = []
           var videoURL = window.URL.createObjectURL(blob)
           document.querySelector('a#downloadLink_Even').href = videoURL
           document.querySelector('a#downloadLink_Even').innerHTML = 'Download mp3 file'
           var rand = this.startTime_Even + '-' + this.endTime_Even
-          var name = 'audio_' + rand + '.mp3'
+          var name = 'audio_' + rand + '.webm'
           document.querySelector('a#downloadLink_Even').setAttribute('download', name)
           document.querySelector('a#downloadLink_Even').setAttribute('name', name)
           console.log('3Even')
@@ -270,7 +274,7 @@ export default {
     async OddrecordPer10s () {
       this.CaptureScreen()
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(10000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked()
       document.querySelector('a#downloadLink').click()
       document.querySelector('a#screenshotLink').click()
@@ -279,7 +283,7 @@ export default {
     async EvenrecordPer10s () {
       this.CaptureScreenEven()
       this.BtnRecordClicked_Even()
-      await this.setTimeoutPromise(10000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked_Even()
       document.querySelector('a#downloadLink_Even').click()
       document.querySelector('a#screenshotLink_Even').click()
@@ -287,9 +291,9 @@ export default {
     },
     async AllrecordPer10s () {
       this.OddrecordPer10s()
-      await this.setTimeoutPromise(9770)
+      await this.setTimeoutPromise(58770)
       this.EvenrecordPer10s()
-      await this.setTimeoutPromise(9770)
+      await this.setTimeoutPromise(58770)
       this.AllrecordPer10s()
     }
   }
@@ -309,5 +313,5 @@ export default {
 .left-box { width:55%; height:90%; float:left; box-sizing:border-box; }
 .right-box { width:45%; height:90%; float:right; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; text-align:left; }
 video { background:#222; width:100%; height:400px; }
-canvas { display:none; }
+canvas { display:none; visibility:hidden; }
 </style>
