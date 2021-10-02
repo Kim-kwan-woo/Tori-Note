@@ -8,6 +8,7 @@ import JQuery from 'jquery'
 import VueSlideBar from 'vue-slide-bar'
 import VueSweetalert2 from 'vue-sweetalert2'
 import VueGoodWizard from 'vue-good-wizard'
+import axios from 'axios'
 // eslint-disable-next-line
 let $ = JQuery
 
@@ -22,6 +23,7 @@ Vue.use(VueGoodWizard)
 
 Vue.component('vue-slide-bar', VueSlideBar)
 Vue.config.productionTip = false
+Vue.prototype.$http = axios
 
 /* eslint-disable no-new */
 new Vue({
