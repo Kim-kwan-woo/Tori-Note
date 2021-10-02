@@ -120,7 +120,6 @@ export default {
       $('body').toggleClass('pro-banner-collapse')
     },
     ShareScreen () {
-      this.addTodo('안녕')
       if (navigator.mediaDevices.getDisplayMedia && window.MediaRecorder !== undefined) {
         navigator.mediaDevices.getDisplayMedia({video: true, audio: true}).then(function (screenStream) {
           this.localstream = screenStream
@@ -282,21 +281,11 @@ export default {
       await this.setTimeoutPromise(58770)
       this.AllrecordPer10s()
     },
-<<<<<<< HEAD
     addimg (title, startTime) {
       if (title) {
         this.$http.post('http://localhost:3000/img', {
           title: title,
           startTime: startTime
-=======
-    addTodo (title) {
-      if (title) {
-        this.$http.post('http://localhost:3000/todoData', {
-          title: title
-        }).then((res) => {
-          this.todos.push(res.data)
-          this.title = ''
->>>>>>> studypage
         })
       }
     }
