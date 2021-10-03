@@ -76,8 +76,6 @@
           </div>
           <a id="downloadLink" style="display:none;" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
           <a id="downloadLink_Even" style="display:none;" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
-          <a id="screenshotLink" style="display:none;" download="drawImage.jpeg" name="drawImage.jpeg" href></a><br/>
-          <a id="screenshotLink_Even" style="display:none;" download="drawImage.jpeg" name="drawImage.jpeg" href></a><br/>
         </div>
       </div>
     </div>
@@ -120,7 +118,8 @@ export default {
       mediaRecorder_Even: {},
       chunks_Even: [],
       startTime_Even: {},
-      endTime_Even: {}
+      endTime_Even: {},
+      sending_index: {}
     }
   },
   components: {
@@ -142,6 +141,7 @@ export default {
       $('body').toggleClass('pro-banner-collapse')
     },
     ShareScreen () {
+      this.sending_index = 0
       if (navigator.mediaDevices.getDisplayMedia && window.MediaRecorder !== undefined) {
         navigator.mediaDevices.getDisplayMedia({video: true, audio: true}).then(function (screenStream) {
           this.localstream = screenStream
@@ -239,44 +239,34 @@ export default {
       })
     },
     CaptureScreen () {
-      var date = new Date()
-      var startTime = date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds()
       const video = document.querySelector('video')
       const canvas = window.canvas = document.querySelector('canvas')
       canvas.width = video.videoWidth
       canvas.height = video.videoHeight
       canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
-      canvas.toBlob(function (blob) {}, 'image/jpeg', 0.95)
-      canvas.toBlob(function (blob) {
-        var screenURL = window.URL.createObjectURL(blob)
-        document.querySelector('a#screenshotLink').href = screenURL
-        document.querySelector('a#screenshotLink').innerHTML = 'Download jpeg file'
-        var rand = Math.floor(Math.random() * 10000000)
-        var name = 'screen_' + rand + '.jpeg'
-        document.querySelector('a#screenshotLink').setAttribute('download', name)
-        document.querySelector('a#screenshotLink').setAttribute('name', name)
-        this.addimg(screenURL, startTime)
-      }.bind(this))
-    },
-    CaptureScreenEven () {
-      var date = new Date()
-      var startTime = date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds()
-      const video = document.querySelector('video')
-      const canvas = window.canvas = document.querySelector('canvas')
-      canvas.width = video.videoWidth
-      canvas.height = video.videoHeight
-      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
-      canvas.toBlob(function (blob) {}, 'image/jpeg', 0.95)
-      canvas.toBlob(function (blob) {
-        var screenURL = window.URL.createObjectURL(blob)
-        document.querySelector('a#screenshotLink_Even').href = screenURL
-        document.querySelector('a#screenshotLink_Even').innerHTML = 'Download jpeg file'
-        var rand = Math.floor(Math.random() * 10000000)
-        var name = 'screen_' + rand + '.jpeg'
-        document.querySelector('a#screenshotLink_Even').setAttribute('download', name)
-        document.querySelector('a#screenshotLink_Even').setAttribute('name', name)
-        this.addimg(screenURL, startTime)
-      }.bind(this))
+      const imgBase64 = canvas.toDataURL('image/jpeg', 'image/octet-stream')
+      const decodImg = atob(imgBase64.split(',')[1])
+
+      let array = []
+      for (let i = 0; i < decodImg.length; i++) {
+        array.push(decodImg.charCodeAt(i))
+      }
+
+      const file = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
+      const fileName = 'img_' + this.sending_index++ + '.jpeg'
+      let formData = new FormData()
+      formData.append('upload', file, fileName)
+
+      $.ajax({
+        type: 'post',
+        url: 'http://localhost:3000/upload',
+        cache: false,
+        data: formData,
+        processData: false,
+        contentType: false
+      }).catch(error => {
+        console.log(error.message)
+      })
     },
     async OddrecordPer10s () {
       this.CaptureScreen()
@@ -284,16 +274,14 @@ export default {
       await this.setTimeoutPromise(59000)
       await this.BtnStopClicked()
       document.querySelector('a#downloadLink').click()
-      document.querySelector('a#screenshotLink').click()
       console.log('odd')
     },
     async EvenrecordPer10s () {
-      this.CaptureScreenEven()
+      this.CaptureScreen()
       this.BtnRecordClicked_Even()
       await this.setTimeoutPromise(59000)
       await this.BtnStopClicked_Even()
       document.querySelector('a#downloadLink_Even').click()
-      document.querySelector('a#screenshotLink_Even').click()
       console.log('even')
     },
     async AllrecordPer10s () {
@@ -302,14 +290,6 @@ export default {
       this.EvenrecordPer10s()
       await this.setTimeoutPromise(58770)
       this.AllrecordPer10s()
-    },
-    addimg (title, startTime) {
-      if (title) {
-        this.$http.post('http://localhost:3000/img', {
-          title: title,
-          startTime: startTime
-        })
-      }
     }
   }
 }
