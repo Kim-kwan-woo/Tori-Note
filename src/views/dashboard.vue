@@ -283,7 +283,7 @@ export default {
     },
     addimg (title, startTime) {
       if (title) {
-        this.$http.post('http://localhost:3000/img', {
+        this.$http.post('http://localhost:3000', {
           title: title,
           startTime: startTime
         })
