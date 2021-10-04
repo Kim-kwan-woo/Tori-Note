@@ -82,6 +82,7 @@
 <script lang='js'>
 import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
+
 let $ = JQuery
 export default {
   name: 'dashboard',
@@ -155,10 +156,10 @@ export default {
           this.chunks = []
           const fileName = 'audio_' + this.sending_index++ + '.webm'
           let formData = new FormData()
-          formData.append('upload', file, fileName)
+          formData.append('audio', file, fileName)
           $.ajax({
             type: 'post',
-            url: 'http://localhost:3000/upload',
+            url: 'http://localhost:3000/',
             cache: false,
             data: formData,
             processData: false,
@@ -192,10 +193,10 @@ export default {
           this.chunks_Even = []
           const fileName = 'audio_' + this.sending_index++ + '.webm'
           let formData = new FormData()
-          formData.append('upload', file, fileName)
+          formData.append('audio', file, fileName)
           $.ajax({
             type: 'post',
-            url: 'http://localhost:3000/upload',
+            url: 'http://localhost:3000/',
             cache: false,
             data: formData,
             processData: false,
