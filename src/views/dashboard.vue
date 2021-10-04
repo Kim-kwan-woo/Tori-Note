@@ -74,8 +74,6 @@
           <div class='right-box'>
             <h4 v-for="(item,i) of timeline" v-bind:key='item' v-if="i < 3">#{{item.key_word}}&nbsp;&nbsp;</h4>
           </div>
-          <a id="downloadLink" style="display:none;" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
-          <a id="downloadLink_Even" style="display:none;" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
         </div>
       </div>
     </div>
@@ -101,12 +99,8 @@ export default {
       localStream: {},
       mediaRecorder: {},
       chunks: [],
-      startTime: {},
-      endTime: {},
       mediaRecorder_Even: {},
       chunks_Even: [],
-      startTime_Even: {},
-      endTime_Even: {},
       sending_index: {}
     }
   },
@@ -140,77 +134,75 @@ export default {
       })
     },
     BtnRecordClicked () {
-      var date = new Date()
-      this.startTime = date.getHours() + '_' + date.getMinutes() + '_' + date.getSeconds()
       if (typeof MediaRecorder.isTypeSupported === 'function') {
         var options = {
-          bitsPerSecond: 70000,
+          bitsPerSecond: 80000,
           mimeType: 'audio/webm;codecs=opus' }
         this.mediaRecorder = new MediaRecorder(this.localstream, options)
       } else {
         this.mediaRecorder = new MediaRecorder(this.localstream)
       }
       this.mediaRecorder.start(10)
-      console.log('1')
       this.mediaRecorder.ondataavailable = function (e) {
         this.chunks.push(e.data)
       }.bind(this)
     },
     BtnStopClicked () {
-      var date = new Date()
-      this.endTime = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
       this.mediaRecorder.stop()
-      console.log('2')
       return new Promise((resolve, reject) => {
         this.mediaRecorder.onstop = function () {
-          var blob = new Blob(this.chunks, { type: 'audio/webm' })
+          const file = new Blob(this.chunks, {type: 'audio/webm'})
           this.chunks = []
-          var videoURL = window.URL.createObjectURL(blob)
-          document.querySelector('a#downloadLink').href = videoURL
-          document.querySelector('a#downloadLink').innerHTML = 'Download mp3 file'
-          var rand = this.startTime + '-' + this.endTime
-          var name = 'audio_' + rand + '.webm'
-          document.querySelector('a#downloadLink').setAttribute('download', name)
-          document.querySelector('a#downloadLink').setAttribute('name', name)
-          console.log('3')
+          const fileName = 'audio_' + this.sending_index++ + '.webm'
+          let formData = new FormData()
+          formData.append('upload', file, fileName)
+          $.ajax({
+            type: 'post',
+            url: 'http://localhost:3000/upload',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false
+          }).catch(error => {
+            console.log(error.message)
+          })
           resolve()
         }.bind(this)
       })
     },
     BtnRecordClicked_Even () {
-      var date = new Date()
-      this.startTime_Even = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
       if (typeof MediaRecorder.isTypeSupported === 'function') {
         var options = {
-          bitsPerSecond: 70000,
+          bitsPerSecond: 80000,
           mimeType: 'audio/webm;codecs=opus' }
         this.mediaRecorder_Even = new MediaRecorder(this.localstream, options)
       } else {
         this.mediaRecorder_Even = new MediaRecorder(this.localstream)
       }
       this.mediaRecorder_Even.start(10)
-      console.log('1Even')
       this.mediaRecorder_Even.ondataavailable = function (e) {
         this.chunks_Even.push(e.data)
       }.bind(this)
     },
     BtnStopClicked_Even () {
-      var date = new Date()
-      this.endTime_Even = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
       this.mediaRecorder_Even.stop()
-      console.log('2Even')
       return new Promise((resolve, reject) => {
         this.mediaRecorder_Even.onstop = function () {
-          var blob = new Blob(this.chunks_Even, { type: 'audio/webm' })
+          const file = new Blob(this.chunks_Even, {type: 'audio/webm'})
           this.chunks_Even = []
-          var videoURL = window.URL.createObjectURL(blob)
-          document.querySelector('a#downloadLink_Even').href = videoURL
-          document.querySelector('a#downloadLink_Even').innerHTML = 'Download mp3 file'
-          var rand = this.startTime_Even + '-' + this.endTime_Even
-          var name = 'audio_' + rand + '.webm'
-          document.querySelector('a#downloadLink_Even').setAttribute('download', name)
-          document.querySelector('a#downloadLink_Even').setAttribute('name', name)
-          console.log('3Even')
+          const fileName = 'audio_' + this.sending_index++ + '.webm'
+          let formData = new FormData()
+          formData.append('upload', file, fileName)
+          $.ajax({
+            type: 'post',
+            url: 'http://localhost:3000/upload',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false
+          }).catch(error => {
+            console.log(error.message)
+          })
           resolve()
         }.bind(this)
       })
@@ -228,7 +220,7 @@ export default {
         array.push(decodImg.charCodeAt(i))
       }
       const file = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
-      const fileName = 'img_' + this.sending_index++ + '.jpeg'
+      const fileName = 'img_' + this.sending_index + '.jpeg'
       let formData = new FormData()
       formData.append('upload', file, fileName)
       $.ajax({
@@ -245,24 +237,20 @@ export default {
     async OddrecordPer10s () {
       this.CaptureScreen()
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(59000)
+      await this.setTimeoutPromise(10000)
       await this.BtnStopClicked()
-      document.querySelector('a#downloadLink').click()
-      console.log('odd')
     },
     async EvenrecordPer10s () {
       this.CaptureScreen()
       this.BtnRecordClicked_Even()
-      await this.setTimeoutPromise(59000)
+      await this.setTimeoutPromise(10000)
       await this.BtnStopClicked_Even()
-      document.querySelector('a#downloadLink_Even').click()
-      console.log('even')
     },
     async AllrecordPer10s () {
       this.OddrecordPer10s()
-      await this.setTimeoutPromise(58770)
+      await this.setTimeoutPromise(9770)
       this.EvenrecordPer10s()
-      await this.setTimeoutPromise(58770)
+      await this.setTimeoutPromise(9770)
       this.AllrecordPer10s()
     }
   }
