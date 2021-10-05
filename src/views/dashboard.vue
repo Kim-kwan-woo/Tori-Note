@@ -18,22 +18,24 @@
           <div class='card'>
             <div class='card-body'>
               <h4 class='card-title mb-0' id='script'>Script</h4><br/>
-              <p>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</p>
+              <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+              <div class='row' style='padding-left:2%; padding-right:2%;'>
+                <img width='38%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" style='margin-right:2%;'>
+                <textarea rows='4' style='width:60%; border:none;'>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</textarea>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class='col-md-4 grid-margin stretch-card'>
+      <div class='col-md-3 grid-margin stretch-card'>
         <div class='card'>
           <div class='card-body d-flex flex-column'>
             <h4 class='card-title mb-0'>Time Line</h4><br/>
             <div class='col scroll type1'>
-              <div v-for="item of timeline" v-bind:key='item' class='card1'>
-                <div class='card-body'>
+              <div v-for="item of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
+                <div class='card-body' style='padding:0px;'>
                   <div class='row'>
-                  <img width='40%' height='40%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg">
-                    &nbsp;&nbsp;{{item.key_word}} <br/>
-                    &nbsp;&nbsp;{{item.time}}
+                  <img width='100%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg">
                   </div>
                 </div>
               </div>
@@ -103,7 +105,8 @@ export default {
       chunks: [],
       mediaRecorder_Even: {},
       chunks_Even: [],
-      sending_index: {}
+      sending_index: {},
+      curScript: {}
     }
   },
   components: {
@@ -135,6 +138,20 @@ export default {
         setTimeout(() => resolve(), ms)
       })
     },
+    editScript () {
+      var textarea = document.querySelector('textarea')
+      var editScript = textarea.value
+      $.ajax({
+        type: 'post',
+        url: 'http://localhost:3000/',
+        data: {
+          'editScript': editScript
+        },
+        dataType: 'json'
+      }).catch(error => {
+        console.log(error.message)
+      })
+    },
     BtnRecordClicked () {
       if (typeof MediaRecorder.isTypeSupported === 'function') {
         var options = {
@@ -155,8 +172,8 @@ export default {
         endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
         region: 'kr-standard',
         credentials: {
-          accessKeyId: '',
-          secretAccessKey: ''
+          accessKeyId: 'LfBjyBF6ocOQYRbUixDo',
+          secretAccessKey: '15bfVslnjweqk144cX9lAx5TjbkNfDvvA7KPFcKG'
         }
       })
       this.mediaRecorder.stop()
@@ -195,8 +212,8 @@ export default {
         endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
         region: 'kr-standard',
         credentials: {
-          accessKeyId: '',
-          secretAccessKey: ''
+          accessKeyId: 'LfBjyBF6ocOQYRbUixDo',
+          secretAccessKey: '15bfVslnjweqk144cX9lAx5TjbkNfDvvA7KPFcKG'
         }
       })
       this.mediaRecorder_Even.stop()
@@ -244,21 +261,21 @@ export default {
     },
     async OddrecordPer10s () {
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(10000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked()
       this.CaptureScreen()
     },
     async EvenrecordPer10s () {
       this.BtnRecordClicked_Even()
-      await this.setTimeoutPromise(10000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked_Even()
       this.CaptureScreen()
     },
     async AllrecordPer10s () {
       this.OddrecordPer10s()
-      await this.setTimeoutPromise(9770)
+      await this.setTimeoutPromise(58770)
       this.EvenrecordPer10s()
-      await this.setTimeoutPromise(9770)
+      await this.setTimeoutPromise(58770)
       this.AllrecordPer10s()
     }
   }
@@ -277,6 +294,6 @@ export default {
 }
 .left-box { width:55%; height:90%; float:left; box-sizing:border-box; }
 .right-box { width:45%; height:90%; float:right; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; text-align:left; }
-video { background:#222; width:100%; height:400px; }
+video { background:#222; width:100%; height:440px; }
 canvas { display:none; visibility:hidden; }
 </style>
