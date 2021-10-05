@@ -7,7 +7,8 @@
             <div class='card'>
               <div class='card-body'>
                 <h4 class='card-title mb-0'>Video</h4>
-                <div style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"><i class="mdi mdi-step-forward"></i>Start</b-button></div>
+                <div v-if="Record" style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="StopPer10s"><i class="mdi mdi-stop"></i>Stop</b-button></div>
+                <div v-else style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"><i class="mdi mdi-step-forward"></i>Start</b-button></div>
                 <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
                 <video ref="videoElement" controls autoplay></video><br/>
                 <canvas></canvas>
@@ -106,7 +107,9 @@ export default {
       mediaRecorder_Even: {},
       chunks_Even: [],
       sending_index: {},
-      curScript: {}
+      curScript: {},
+      StopPer10: false,
+      Record: false
     }
   },
   components: {
@@ -261,22 +264,31 @@ export default {
     },
     async OddrecordPer10s () {
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(59000)
+      await this.setTimeoutPromise(10000)
       await this.BtnStopClicked()
       this.CaptureScreen()
     },
     async EvenrecordPer10s () {
       this.BtnRecordClicked_Even()
-      await this.setTimeoutPromise(59000)
+      await this.setTimeoutPromise(10000)
       await this.BtnStopClicked_Even()
       this.CaptureScreen()
     },
     async AllrecordPer10s () {
-      this.OddrecordPer10s()
-      await this.setTimeoutPromise(58770)
-      this.EvenrecordPer10s()
-      await this.setTimeoutPromise(58770)
-      this.AllrecordPer10s()
+      this.Record = true
+      this.StopPer10 = false
+      while (this.StopPer10 === false) {
+        this.OddrecordPer10s()
+        await this.setTimeoutPromise(9770)
+        this.EvenrecordPer10s()
+        await this.setTimeoutPromise(9770)
+      }
+    },
+    StopPer10s () {
+      this.Record = false
+      this.StopPer10 = true
+      this.chunks = [] // 나중에 수정해야 할지도
+      this.chunks_Even = []
     }
   }
 }
