@@ -175,8 +175,8 @@ export default {
         endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
         region: 'kr-standard',
         credentials: {
-          accessKeyId: 'LfBjyBF6ocOQYRbUixDo',
-          secretAccessKey: '15bfVslnjweqk144cX9lAx5TjbkNfDvvA7KPFcKG'
+          accessKeyId: '',
+          secretAccessKey: ''
         }
       })
       this.mediaRecorder.stop()
@@ -215,8 +215,8 @@ export default {
         endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
         region: 'kr-standard',
         credentials: {
-          accessKeyId: 'LfBjyBF6ocOQYRbUixDo',
-          secretAccessKey: '15bfVslnjweqk144cX9lAx5TjbkNfDvvA7KPFcKG'
+          accessKeyId: '',
+          secretAccessKey: ''
         }
       })
       this.mediaRecorder_Even.stop()
