@@ -79,6 +79,7 @@
     </div>
   </section>
 </template>
+
 <script lang='js'>
 import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
@@ -149,24 +150,27 @@ export default {
       }.bind(this)
     },
     BtnStopClicked () {
+      const AWS = require('aws-sdk')
+      const S3 = new AWS.S3({
+        endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
+        region: 'kr-standard',
+        credentials: {
+          accessKeyId: '',
+          secretAccessKey: ''
+        }
+      })
       this.mediaRecorder.stop()
       return new Promise((resolve, reject) => {
-        this.mediaRecorder.onstop = function () {
+        this.mediaRecorder.onstop = async function () {
           const file = new Blob(this.chunks, {type: 'audio/webm'})
           this.chunks = []
-          const fileName = 'audio_' + this.sending_index++ + '.webm'
-          let formData = new FormData()
-          formData.append('audio', file, fileName)
-          $.ajax({
-            type: 'post',
-            url: 'http://localhost:3000/',
-            cache: false,
-            data: formData,
-            processData: false,
-            contentType: false
-          }).catch(error => {
-            console.log(error.message)
-          })
+          const fileName = 'audio_' + this.sending_index + '.webm'
+          await S3.putObject({
+            Bucket: 'yuki/audio',
+            Key: fileName,
+            ACL: 'public-read',
+            Body: file
+          }).promise()
           resolve()
         }.bind(this)
       })
@@ -186,24 +190,27 @@ export default {
       }.bind(this)
     },
     BtnStopClicked_Even () {
+      const AWS = require('aws-sdk')
+      const S3 = new AWS.S3({
+        endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
+        region: 'kr-standard',
+        credentials: {
+          accessKeyId: '',
+          secretAccessKey: ''
+        }
+      })
       this.mediaRecorder_Even.stop()
       return new Promise((resolve, reject) => {
-        this.mediaRecorder_Even.onstop = function () {
+        this.mediaRecorder_Even.onstop = async function () {
           const file = new Blob(this.chunks_Even, {type: 'audio/webm'})
           this.chunks_Even = []
-          const fileName = 'audio_' + this.sending_index++ + '.webm'
-          let formData = new FormData()
-          formData.append('audio', file, fileName)
-          $.ajax({
-            type: 'post',
-            url: 'http://localhost:3000/',
-            cache: false,
-            data: formData,
-            processData: false,
-            contentType: false
-          }).catch(error => {
-            console.log(error.message)
-          })
+          const fileName = 'audio_' + this.sending_index + '.webm'
+          await S3.putObject({
+            Bucket: 'yuki/audio',
+            Key: fileName,
+            ACL: 'public-read',
+            Body: file
+          }).promise()
           resolve()
         }.bind(this)
       })
@@ -221,7 +228,7 @@ export default {
         array.push(decodImg.charCodeAt(i))
       }
       const file = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
-      const fileName = 'img_' + this.sending_index + '.jpeg'
+      const fileName = 'img_' + this.sending_index++ + '.jpeg'
       let formData = new FormData()
       formData.append('upload', file, fileName)
       $.ajax({
@@ -236,16 +243,16 @@ export default {
       })
     },
     async OddrecordPer10s () {
-      this.CaptureScreen()
       this.BtnRecordClicked()
       await this.setTimeoutPromise(10000)
       await this.BtnStopClicked()
+      this.CaptureScreen()
     },
     async EvenrecordPer10s () {
-      this.CaptureScreen()
       this.BtnRecordClicked_Even()
       await this.setTimeoutPromise(10000)
       await this.BtnStopClicked_Even()
+      this.CaptureScreen()
     },
     async AllrecordPer10s () {
       this.OddrecordPer10s()
