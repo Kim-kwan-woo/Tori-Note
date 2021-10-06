@@ -86,6 +86,7 @@
 <script lang='js'>
 import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
+import S3config from './Key.js'
 import axios from 'axios'
 
 let $ = JQuery
@@ -185,8 +186,8 @@ export default {
         endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
         region: 'kr-standard',
         credentials: {
-          accessKeyId: 'LfBjyBF6ocOQYRbUixDo',
-          secretAccessKey: '15bfVslnjweqk144cX9lAx5TjbkNfDvvA7KPFcKG'
+          accessKeyId: S3config.accessKeyId,
+          secretAccessKey: S3config.secretAccessKey
         }
       })
       this.mediaRecorder.stop()
@@ -196,7 +197,7 @@ export default {
           this.chunks = []
           const fileName = 'audio_' + this.sending_index + '.webm'
           await S3.putObject({
-            Bucket: 'yuki/audio',
+            Bucket: S3config.Bucket,
             Key: fileName,
             ACL: 'public-read',
             Body: file
@@ -225,8 +226,8 @@ export default {
         endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
         region: 'kr-standard',
         credentials: {
-          accessKeyId: 'LfBjyBF6ocOQYRbUixDo',
-          secretAccessKey: '15bfVslnjweqk144cX9lAx5TjbkNfDvvA7KPFcKG'
+          accessKeyId: S3config.accessKeyId,
+          secretAccessKey: S3config.secretAccessKey
         }
       })
       this.mediaRecorder_Even.stop()
@@ -236,7 +237,7 @@ export default {
           this.chunks_Even = []
           const fileName = 'audio_' + this.sending_index + '.webm'
           await S3.putObject({
-            Bucket: 'yuki/audio',
+            Bucket: S3config.Bucket,
             Key: fileName,
             ACL: 'public-read',
             Body: file
@@ -274,13 +275,13 @@ export default {
     },
     async OddrecordPer10s () {
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(59000)
+      await this.setTimeoutPromise(9000)
       await this.BtnStopClicked()
       this.CaptureScreen()
     },
     async EvenrecordPer10s () {
       this.BtnRecordClicked_Even()
-      await this.setTimeoutPromise(59000)
+      await this.setTimeoutPromise(9000)
       await this.BtnStopClicked_Even()
       this.CaptureScreen()
     },
@@ -289,9 +290,9 @@ export default {
       this.StopPer10 = false
       while (this.StopPer10 === false) {
         this.OddrecordPer10s()
-        await this.setTimeoutPromise(58770)
+        await this.setTimeoutPromise(8770)
         this.EvenrecordPer10s()
-        await this.setTimeoutPromise(58770)
+        await this.setTimeoutPromise(8770)
       }
     },
     StopPer10s () {
