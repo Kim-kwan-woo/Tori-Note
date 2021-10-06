@@ -86,6 +86,7 @@
 <script lang='js'>
 import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
+import axios from 'axios'
 
 let $ = JQuery
 export default {
@@ -144,6 +145,11 @@ export default {
     imgClicked (script) {
       var textarea = document.querySelector('textarea')
       textarea.value = script
+
+      axios.get('http://localhost:3000/')
+        .then(res => {
+          console.log(res.data)
+        })
     },
     editScript () {
       var textarea = document.querySelector('textarea')
