@@ -30,13 +30,13 @@
       </div>
       <div class='col-md-3 grid-margin stretch-card'>
         <div class='card'>
-          <div class='card-body d-flex flex-column'>
-            <h4 class='card-title mb-0'>Time Line</h4><br/>
+          <div class='card-body d-flex flex-column' style='padding-left:8%; padding-right:8%;'>
+            <h4 class='card-title mb-0' style='padding-left:10px;'>Time Line</h4><br/>
             <div class='col scroll type1'>
               <div v-for="item of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
                 <div class='card-body' style='padding:0px;'>
                   <div class='row'>
-                  <img width='100%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg">
+                  <img width='100%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" @click="imgClicked(item.summary)">
                   </div>
                 </div>
               </div>
@@ -141,6 +141,10 @@ export default {
         setTimeout(() => resolve(), ms)
       })
     },
+    imgClicked (script) {
+      var textarea = document.querySelector('textarea')
+      textarea.value = script
+    },
     editScript () {
       var textarea = document.querySelector('textarea')
       var editScript = textarea.value
@@ -175,8 +179,8 @@ export default {
         endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
         region: 'kr-standard',
         credentials: {
-          accessKeyId: '',
-          secretAccessKey: ''
+          accessKeyId: 'LfBjyBF6ocOQYRbUixDo',
+          secretAccessKey: '15bfVslnjweqk144cX9lAx5TjbkNfDvvA7KPFcKG'
         }
       })
       this.mediaRecorder.stop()
@@ -215,8 +219,8 @@ export default {
         endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
         region: 'kr-standard',
         credentials: {
-          accessKeyId: '',
-          secretAccessKey: ''
+          accessKeyId: 'LfBjyBF6ocOQYRbUixDo',
+          secretAccessKey: '15bfVslnjweqk144cX9lAx5TjbkNfDvvA7KPFcKG'
         }
       })
       this.mediaRecorder_Even.stop()
@@ -264,13 +268,13 @@ export default {
     },
     async OddrecordPer10s () {
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(10000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked()
       this.CaptureScreen()
     },
     async EvenrecordPer10s () {
       this.BtnRecordClicked_Even()
-      await this.setTimeoutPromise(10000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked_Even()
       this.CaptureScreen()
     },
@@ -279,9 +283,9 @@ export default {
       this.StopPer10 = false
       while (this.StopPer10 === false) {
         this.OddrecordPer10s()
-        await this.setTimeoutPromise(9770)
+        await this.setTimeoutPromise(58770)
         this.EvenrecordPer10s()
-        await this.setTimeoutPromise(9770)
+        await this.setTimeoutPromise(58770)
       }
     },
     StopPer10s () {
@@ -306,6 +310,6 @@ export default {
 }
 .left-box { width:55%; height:90%; float:left; box-sizing:border-box; }
 .right-box { width:45%; height:90%; float:right; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; text-align:left; }
-video { background:#222; width:100%; height:440px; }
+video { background:#222; width:100%; height:480px; }
 canvas { display:none; visibility:hidden; }
 </style>
