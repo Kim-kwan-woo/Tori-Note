@@ -16,7 +16,7 @@
         <b-nav-item class="font-weight-semibold d-none d-lg-block" href="#">Online Lecture Note & Summary Service</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="navbar-nav-right ml-auto">
-        <b-nav-item-dropdown right class="preview-list user-dropdown">
+        <div style='position:absolute; right:35px;'><b-nav-item-dropdown right class="preview-list user-dropdown">
           <template slot="button-content">
             <div class="d-flex align-items-center">
               <img class="img-xs rounded-circle" src="https://avatars.githubusercontent.com/u/5829095?v=4" alt="Profile image">
@@ -30,7 +30,7 @@
             </div>
           </b-dropdown-item>
           <b-dropdown-item>Sign Out<i class="dropdown-item-icon ti-power-off"></i></b-dropdown-item>
-        </b-nav-item-dropdown>
+        </b-nav-item-dropdown></div>
       </b-navbar-nav>
       <button class="navbar-toggler navbar-toggler-right align-self-center" type="button" @click="collapedMobileSidebar()">
         <span class="mdi mdi-menu"></span>

@@ -1,37 +1,10 @@
 <template lang='html'>
   <section class='Study'>
-    <div class='col'>
-      <div class='row' style='margin-right:1px;'>
-        <div class='col'>
-          <div class='col grid-margin stretch-card'>
-            <div class='card'>
-              <div class='card-body'>
-                <h4 class='card-title mb-0'>Video</h4>
-                <div v-if="Record" style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="StopPer10s"><i class="mdi mdi-stop"></i>Stop</b-button></div>
-                <div v-else style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"><i class="mdi mdi-step-forward"></i>Start</b-button></div>
-                <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
-                <video ref="videoElement" controls autoplay></video><br/>
-                <canvas></canvas>
-              </div>
-            </div>
-          </div>
-        <div class='col grid-margin stretch-card'>
-          <div class='card'>
-            <div class='card-body'>
-              <h4 class='card-title mb-0' id='script'>Script</h4><br/>
-              <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
-              <div class='row' style='padding-left:2%; padding-right:2%;'>
-                <img width='38%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" style='margin-right:2%;'>
-                <textarea rows='4' style='width:60%; border:none;'>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</textarea>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class='col-md-3 grid-margin stretch-card'>
+    <div class='row'>
+      <div style='position:relative; top:3px; left:3px; padding:2px;'><img v-on:click="Time_Line=!Time_Line" id="toggle" width='18px' height='18px' src="../assets/images/arrow_r.png"></div>
+      <div v-show="Time_Line" class='col-md-1 grid-margin stretch-card timelineDiv' id='timeline'>
         <div class='card'>
-          <div class='card-body d-flex flex-column' style='padding-left:8%; padding-right:8%;'>
-            <h4 class='card-title mb-0' style='padding-left:10px;'>Time Line</h4><br/>
+          <div class='card-body d-flex flex-column' style='padding-top:5%; padding-left:4%; padding-right:0%;'>
             <div class='col scroll type1'>
               <div v-for="item of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
                 <div class='card-body' style='padding:0px;'>
@@ -44,38 +17,27 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class='col grid-margin stretch-card'>
-      <div class='card'>
-        <div class='card-body d-flex flex-column' style='height:800px;'>
-          <h4 class='card-title mb-0'>Summary</h4>
-          <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light"><i class="mdi mdi-download"></i>Save</b-button></div><br/>
-            <div class='col scroll type1'>
-              <div v-for="item of timeline" v-bind:key='item' class='card1'>
-                <div class='card-body'>
-                  <div class='row'>
-                    <img width='25%' height='25%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg">
-                    <div class='cos-xs-7 col-centered'><br/>
-                      &nbsp;&nbsp;{{item.key_word}}<br/>
-                      &nbsp;&nbsp;{{item.summary}}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div class='col grid-margin stretch-card'>
+        <div class='card'>
+          <div class='card-body'>
+            <h4 class='card-title mb-0'>Video</h4>
+            <div v-if="Record" style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="StopPer10s"><i class="mdi mdi-stop"></i>Stop</b-button></div>
+            <div v-else style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"><i class="mdi mdi-step-forward"></i>Start</b-button></div>
+            <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
+            <video ref="videoElement" controls autoplay></video><br/>
+            <canvas></canvas>
           </div>
         </div>
       </div>
-    </div>
-    <div class='col stretch-card' style='width:98%; margin-left:10px'>
-      <div class='card'>
-        <div class='col card-body'>
-          <h4 class='card-title mb-0'>Keyword</h4><br/>
-          <div class='card-body left-box'>
-            <pie-chart height="200" style='position:relative; left:23%; z-index:100;'></pie-chart>
-          </div>
-          <div class='right-box'>
-            <h4 v-for="(item,i) of timeline" v-bind:key='item' v-if="i < 3">#{{item.key_word}}&nbsp;&nbsp;</h4>
+      <div class='col-md-4 grid-margin stretch-card'>
+        <div class='card'>
+          <div class='card-body'>
+            <h4 class='card-title mb-0' id='script'>Script</h4><br/>
+            <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+            <div class='col' style='padding-left:2%; padding-right:2%;'>
+              <img width='100%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" style='margin-right:2%;'>
+              <textarea rows='6' style='width:100%; border:none;'>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</textarea>
+            </div>
           </div>
         </div>
       </div>
@@ -111,7 +73,8 @@ export default {
       sending_index: {},
       curScript: {},
       StopPer10: false,
-      Record: false
+      Record: false,
+      Time_Line: true
     }
   },
   components: {
@@ -193,9 +156,9 @@ export default {
       this.mediaRecorder.stop()
       return new Promise((resolve, reject) => {
         this.mediaRecorder.onstop = async function () {
-          const file = new Blob(this.chunks, {type: 'audio/webm'})
+          const file = new Blob(this.chunks, {type: 'audio/mp3'})
           this.chunks = []
-          const fileName = 'audio_' + this.sending_index + '.webm'
+          const fileName = '1008_' + this.sending_index + '.mp3'
           await S3.putObject({
             Bucket: S3config.Bucket,
             Key: fileName,
@@ -233,9 +196,9 @@ export default {
       this.mediaRecorder_Even.stop()
       return new Promise((resolve, reject) => {
         this.mediaRecorder_Even.onstop = async function () {
-          const file = new Blob(this.chunks_Even, {type: 'audio/webm'})
+          const file = new Blob(this.chunks_Even, {type: 'audio/mp3'})
           this.chunks_Even = []
-          const fileName = 'audio_' + this.sending_index + '.webm'
+          const fileName = '1008_' + this.sending_index + '.mp3'
           await S3.putObject({
             Bucket: S3config.Bucket,
             Key: fileName,
@@ -312,12 +275,12 @@ export default {
 .type1::-webkit-scrollbar-thumb{ height: 7%; background-color: rgb(223, 223, 223); border-radius: 15px; }
 .type1::-webkit-scrollbar-track{ background-color: white; }
 .card1 {
-    border: solid 1px rgb(223, 223, 223); margin-bottom: 8px;
+    border: solid 1px rgb(223, 223, 223); margin-bottom: 5px;
     .card1-title { color: black; }
     .card1-header { background: black; }
 }
 .left-box { width:55%; height:90%; float:left; box-sizing:border-box; }
 .right-box { width:45%; height:90%; float:right; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; text-align:left; }
-video { background:#222; width:100%; height:480px; }
+video { background:#222; width:100%; height:380px; }
 canvas { display:none; visibility:hidden; }
 </style>
