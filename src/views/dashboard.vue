@@ -295,11 +295,12 @@ export default {
         await this.setTimeoutPromise(8770)
       }
     },
-    StopPer10s () {
+    async StopPer10s () {
       this.Record = false
       this.StopPer10 = true
-      this.chunks = [] // 나중에 수정해야 할지도
-      this.chunks_Even = []
+      await this.BtnStopClicked()
+      await this.BtnStopClicked_Even()
+      this.CaptureScreen()
     }
   }
 }
