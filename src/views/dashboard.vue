@@ -1,39 +1,20 @@
 <template lang='html'>
   <section class='Study'>
-    <div class='col'>
-      <div class='row' style='margin-right:1px;'>
-        <div class='col'>
-          <div class='col grid-margin stretch-card'>
-            <div class='card'>
-              <div class='card-body'>
-                <h4 class='card-title mb-0'>Video</h4>
-                <div style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"><i class="mdi mdi-step-forward"></i>Start</b-button></div>
-                <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
-                <video ref="videoElement" controls autoplay></video><br/>
-                <canvas></canvas>
-              </div>
-            </div>
-          </div>
-        <div class='col grid-margin stretch-card'>
-          <div class='card'>
-            <div class='card-body'>
-              <h4 class='card-title mb-0' id='script'>Script</h4><br/>
-              <p>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</p>
-            </div>
-          </div>
-        </div>
+    <div class='row'>
+      <div id="popPosition" class="popPosition card">
+        <p>Tori Note가 여러분의 강의력을 높여줄게요!</p>
+        <textarea id="title" rows='1' style='width:98%; margin-bottom:15px' placeholder="Input your Note Title..."></textarea><br/>
+        <b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"><i class="mdi mdi-note-plus"></i>Create</b-button>
       </div>
-      <div class='col-md-4 grid-margin stretch-card'>
+      <div style='position:relative; top:3px; left:3px; padding:2px;'><img v-on:click="Time_Line=!Time_Line" id="toggle" width='18px' height='18px' src="../assets/images/arrow_r.png"></div>
+      <div v-show="Time_Line" class='col-md-1 grid-margin stretch-card timelineDiv' id='timeline'>
         <div class='card'>
-          <div class='card-body d-flex flex-column'>
-            <h4 class='card-title mb-0'>Time Line</h4><br/>
+          <div class='card-body d-flex flex-column' style='padding-top:5%; padding-left:4%; padding-right:0%;'>
             <div class='col scroll type1'>
-              <div v-for="item of timeline" v-bind:key='item' class='card1'>
-                <div class='card-body'>
+              <div v-for="item of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
+                <div class='card-body' style='padding:0px;'>
                   <div class='row'>
-                  <img width='40%' height='40%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg">
-                    &nbsp;&nbsp;{{item.key_word}} <br/>
-                    &nbsp;&nbsp;{{item.time}}
+                  <img width='100%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" @click="imgClicked(item.summary)">
                   </div>
                 </div>
               </div>
@@ -41,49 +22,40 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class='col grid-margin stretch-card'>
-      <div class='card'>
-        <div class='card-body d-flex flex-column' style='height:800px;'>
-          <h4 class='card-title mb-0'>Summary</h4>
-          <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light"><i class="mdi mdi-download"></i>Save</b-button></div><br/>
-            <div class='col scroll type1'>
-              <div v-for="item of timeline" v-bind:key='item' class='card1'>
-                <div class='card-body'>
-                  <div class='row'>
-                    <img width='25%' height='25%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg">
-                    <div class='cos-xs-7 col-centered'><br/>
-                      &nbsp;&nbsp;{{item.key_word}}<br/>
-                      &nbsp;&nbsp;{{item.summary}}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div class='col grid-margin stretch-card'>
+        <div class='card'>
+          <div class='card-body'>
+            <h4 class='card-title mb-0'>Video</h4>
+            <div v-if="Record" style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="StopPer10s"><i class="mdi mdi-stop"></i>Stop</b-button></div>
+            <div v-else style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="ShowPopTitle"><i class="mdi mdi-step-forward"></i>Start</b-button></div>
+            <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
+            <video ref="videoElement" controls autoplay></video><br/>
+            <canvas></canvas>
           </div>
         </div>
       </div>
-    </div>
-    <div class='col stretch-card' style='width:98%; margin-left:10px'>
-      <div class='card'>
-        <div class='col card-body'>
-          <h4 class='card-title mb-0'>Keyword</h4><br/>
-          <div class='card-body left-box'>
-            <pie-chart height="200" style='position:relative; left:23%; z-index:100;'></pie-chart>
+      <div class='col-md-5 grid-margin stretch-card'>
+        <div class='card'>
+          <div class='card-body'>
+            <h4 class='card-title mb-0' id='script'>Script</h4><br/>
+            <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+            <div class='col' style='padding-left:0px; padding-right:0px;'>
+              <img width='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" style='margin-right:2%;'>
+              <textarea id="script" class='scroll type1' rows='5' style='width:100%; border:none;'>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</textarea>
+            </div>
           </div>
-          <div class='right-box'>
-            <h4 v-for="(item,i) of timeline" v-bind:key='item' v-if="i < 3">#{{item.key_word}}&nbsp;&nbsp;</h4>
-          </div>
-          <a id="downloadLink" style="display:none;" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
-          <a id="downloadLink_Even" style="display:none;" download="mediarecorder.mp3" name="mediarecorder.mp3" href></a><br/>
         </div>
       </div>
     </div>
   </section>
 </template>
+
 <script lang='js'>
 import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
+import S3config from './Key.js'
+import axios from 'axios'
+
 let $ = JQuery
 export default {
   name: 'dashboard',
@@ -101,13 +73,13 @@ export default {
       localStream: {},
       mediaRecorder: {},
       chunks: [],
-      startTime: {},
-      endTime: {},
       mediaRecorder_Even: {},
       chunks_Even: [],
-      startTime_Even: {},
-      endTime_Even: {},
-      sending_index: {}
+      sending_index: {},
+      curScript: {},
+      StopPer10: false,
+      Record: false,
+      Time_Line: true
     }
   },
   components: {
@@ -139,83 +111,115 @@ export default {
         setTimeout(() => resolve(), ms)
       })
     },
+    imgClicked (script) {
+      var textarea = document.querySelector('textarea')
+      textarea.value = script
+
+      axios.get('http://localhost:3000/')
+        .then(res => {
+          console.log(res.data)
+        })
+    },
+    editScript () {
+      var textarea = document.querySelector('textarea#script')
+      var editScript = textarea.value
+      $.ajax({
+        type: 'post',
+        url: 'http://localhost:3000/',
+        data: {
+          'editScript': editScript
+        },
+        dataType: 'json'
+      }).catch(error => {
+        console.log(error.message)
+      })
+    },
     BtnRecordClicked () {
-      var date = new Date()
-      this.startTime = date.getHours() + '_' + date.getMinutes() + '_' + date.getSeconds()
       if (typeof MediaRecorder.isTypeSupported === 'function') {
         var options = {
-          bitsPerSecond: 70000,
+          bitsPerSecond: 80000,
           mimeType: 'audio/webm;codecs=opus' }
         this.mediaRecorder = new MediaRecorder(this.localstream, options)
       } else {
         this.mediaRecorder = new MediaRecorder(this.localstream)
       }
       this.mediaRecorder.start(10)
-      console.log('1')
       this.mediaRecorder.ondataavailable = function (e) {
         this.chunks.push(e.data)
       }.bind(this)
     },
     BtnStopClicked () {
-      var date = new Date()
-      this.endTime = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+      const AWS = require('aws-sdk')
+      const S3 = new AWS.S3({
+        endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
+        region: 'kr-standard',
+        credentials: {
+          accessKeyId: S3config.accessKeyId,
+          secretAccessKey: S3config.secretAccessKey
+        }
+      })
       this.mediaRecorder.stop()
-      console.log('2')
       return new Promise((resolve, reject) => {
-        this.mediaRecorder.onstop = function () {
-          var blob = new Blob(this.chunks, { type: 'audio/webm' })
+        this.mediaRecorder.onstop = async function () {
+          const file = new Blob(this.chunks, {type: 'audio/webm'})
           this.chunks = []
-          var videoURL = window.URL.createObjectURL(blob)
-          document.querySelector('a#downloadLink').href = videoURL
-          document.querySelector('a#downloadLink').innerHTML = 'Download mp3 file'
-          var rand = this.startTime + '-' + this.endTime
-          var name = 'audio_' + rand + '.webm'
-          document.querySelector('a#downloadLink').setAttribute('download', name)
-          document.querySelector('a#downloadLink').setAttribute('name', name)
-          console.log('3')
+          const fileName = 'audio_' + this.sending_index + '.webm'
+          await S3.putObject({
+            Bucket: S3config.Bucket,
+            Key: fileName,
+            ACL: 'public-read',
+            Body: file
+          }).promise()
           resolve()
         }.bind(this)
       })
     },
     BtnRecordClicked_Even () {
-      var date = new Date()
-      this.startTime_Even = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
       if (typeof MediaRecorder.isTypeSupported === 'function') {
         var options = {
-          bitsPerSecond: 70000,
+          bitsPerSecond: 80000,
           mimeType: 'audio/webm;codecs=opus' }
         this.mediaRecorder_Even = new MediaRecorder(this.localstream, options)
       } else {
         this.mediaRecorder_Even = new MediaRecorder(this.localstream)
       }
       this.mediaRecorder_Even.start(10)
-      console.log('1Even')
       this.mediaRecorder_Even.ondataavailable = function (e) {
         this.chunks_Even.push(e.data)
       }.bind(this)
     },
     BtnStopClicked_Even () {
-      var date = new Date()
-      this.endTime_Even = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+      const AWS = require('aws-sdk')
+      const S3 = new AWS.S3({
+        endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
+        region: 'kr-standard',
+        credentials: {
+          accessKeyId: S3config.accessKeyId,
+          secretAccessKey: S3config.secretAccessKey
+        }
+      })
       this.mediaRecorder_Even.stop()
-      console.log('2Even')
       return new Promise((resolve, reject) => {
-        this.mediaRecorder_Even.onstop = function () {
-          var blob = new Blob(this.chunks_Even, { type: 'audio/webm' })
+        this.mediaRecorder_Even.onstop = async function () {
+          const file = new Blob(this.chunks_Even, {type: 'audio/webm'})
           this.chunks_Even = []
-          var videoURL = window.URL.createObjectURL(blob)
-          document.querySelector('a#downloadLink_Even').href = videoURL
-          document.querySelector('a#downloadLink_Even').innerHTML = 'Download mp3 file'
-          var rand = this.startTime_Even + '-' + this.endTime_Even
-          var name = 'audio_' + rand + '.webm'
-          document.querySelector('a#downloadLink_Even').setAttribute('download', name)
-          document.querySelector('a#downloadLink_Even').setAttribute('name', name)
-          console.log('3Even')
+          const fileName = 'audio_' + this.sending_index + '.webm'
+          await S3.putObject({
+            Bucket: S3config.Bucket,
+            Key: fileName,
+            ACL: 'public-read',
+            Body: file
+          }).promise()
           resolve()
         }.bind(this)
       })
     },
     CaptureScreen () {
+      /*
+      const testimg = document.getElementById('123')
+      const testdata = [{'imgURL': 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAABWoAAAM...'}]
+      testimg.src = testdata[0].imgURL
+      */
       const video = document.querySelector('video')
       const canvas = window.canvas = document.querySelector('canvas')
       canvas.width = video.videoWidth
@@ -243,27 +247,72 @@ export default {
       })
     },
     async OddrecordPer10s () {
-      this.CaptureScreen()
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(59000)
+      await this.setTimeoutPromise(9000)
       await this.BtnStopClicked()
-      document.querySelector('a#downloadLink').click()
-      console.log('odd')
+      this.CaptureScreen()
     },
     async EvenrecordPer10s () {
-      this.CaptureScreen()
       this.BtnRecordClicked_Even()
-      await this.setTimeoutPromise(59000)
+      await this.setTimeoutPromise(9000)
       await this.BtnStopClicked_Even()
-      document.querySelector('a#downloadLink_Even').click()
-      console.log('even')
+      this.CaptureScreen()
     },
     async AllrecordPer10s () {
+<<<<<<< HEAD
       this.OddrecordPer10s()
       await this.setTimeoutPromise(58770)
       this.EvenrecordPer10s()
       await this.setTimeoutPromise(58770)
       this.AllrecordPer10s()
+    },
+    addimg (title, startTime) {
+      if (title) {
+        this.$http.post('http://localhost:3000', {
+          title: title,
+          startTime: startTime
+=======
+      const pop = document.getElementById('popPosition')
+      pop.style.display = 'none'
+
+      var textarea = document.querySelector('textarea#title')
+      var title = textarea.value
+      console.log(title)
+      if (title === '') {
+        alert('제목을 입력하세요!')
+      } else {
+        this.Record = true
+        this.StopPer10 = false
+        $.ajax({
+          type: 'post',
+          url: 'http://localhost:3000/',
+          data: {
+            'title': title
+          },
+          dataType: 'json'
+        }).catch(error => {
+          console.log(error.message)
+>>>>>>> 03018bbc8c3dd8618569baeddbc10466c7da54aa
+        })
+
+        while (this.StopPer10 === false) {
+          this.OddrecordPer10s()
+          await this.setTimeoutPromise(8770)
+          this.EvenrecordPer10s()
+          await this.setTimeoutPromise(8770)
+        }
+      }
+    },
+    async StopPer10s () {
+      this.Record = false
+      this.StopPer10 = true
+      await this.BtnStopClicked()
+      await this.BtnStopClicked_Even()
+      this.CaptureScreen()
+    },
+    ShowPopTitle () {
+      const pop = document.getElementById('popPosition')
+      pop.style.display = 'block'
     }
   }
 }
@@ -275,12 +324,14 @@ export default {
 .type1::-webkit-scrollbar-thumb{ height: 7%; background-color: rgb(223, 223, 223); border-radius: 15px; }
 .type1::-webkit-scrollbar-track{ background-color: white; }
 .card1 {
-    border: solid 1px rgb(223, 223, 223); margin-bottom: 8px;
+    border: solid 1px rgb(223, 223, 223); margin-bottom: 5px;
     .card1-title { color: black; }
     .card1-header { background: black; }
 }
 .left-box { width:55%; height:90%; float:left; box-sizing:border-box; }
 .right-box { width:45%; height:90%; float:right; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; text-align:left; }
-video { background:#222; width:100%; height:400px; }
+video { background:#222; width:100%; height:380px; }
 canvas { display:none; visibility:hidden; }
+
+#popPosition {padding:3%; text-align:center; background-color:#fff; border:solid 1px rgb(223, 223, 223); border-radius:10px 10px 10px 10px; position:absolute; height:210px; width:400px; margin:-105px 0px 0px -200px; top:50%; left:50%; z-index:1; display:none;}
 </style>

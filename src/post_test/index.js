@@ -1,5 +1,6 @@
 var express = require("express");
 var app = express();
+var AWS = require('aws-sdk');
 var multer, storage, path, fs;
 path = require('path');
 multer = require('multer');
@@ -49,6 +50,14 @@ app.post(
 
     res.redirect('/')
     return res.status(200).end();
+  });
+
+app.use(express.urlencoded({extended : false}));
+app.post("", function (req, res) {
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log(req.body);
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    res.json(1); 
   });
 
 app.listen(3000, () => console.log('Server started on port 3000 '));
