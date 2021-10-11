@@ -55,7 +55,6 @@ import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
 import S3config from './Key.js'
 import axios from 'axios'
-
 let $ = JQuery
 export default {
   name: 'dashboard',
@@ -114,7 +113,6 @@ export default {
     imgClicked (script) {
       var textarea = document.querySelector('textarea')
       textarea.value = script
-
       axios.get('http://localhost:3000/')
         .then(res => {
           console.log(res.data)
@@ -261,7 +259,6 @@ export default {
     async AllrecordPer10s () {
       const pop = document.getElementById('popPosition')
       pop.style.display = 'none'
-
       var textarea = document.querySelector('textarea#title')
       var title = textarea.value
       console.log(title)
@@ -280,7 +277,6 @@ export default {
         }).catch(error => {
           console.log(error.message)
         })
-
         while (this.StopPer10 === false) {
           this.OddrecordPer10s()
           await this.setTimeoutPromise(8770)
@@ -318,6 +314,5 @@ export default {
 .right-box { width:45%; height:90%; float:right; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; text-align:left; }
 video { background:#222; width:100%; height:380px; }
 canvas { display:none; visibility:hidden; }
-
 #popPosition {padding:3%; text-align:center; background-color:#fff; border:solid 1px rgb(223, 223, 223); border-radius:10px 10px 10px 10px; position:absolute; height:210px; width:400px; margin:-105px 0px 0px -200px; top:50%; left:50%; z-index:1; display:none;}
 </style>
