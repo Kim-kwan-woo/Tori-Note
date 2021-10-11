@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 // Dashboard Components
 import dashboard from '../views/dashboard'
+import Review from '../views/Review'
 
 // Storage Components
 import MyPdfFiles from '../views/storage/MyPdfFiles'
@@ -28,6 +29,11 @@ export default new Router({
         path: '/dashboard',
         name: 'dashboard',
         component: dashboard
+      },
+      {
+        path: '/Review',
+        name: 'Review',
+        component: Review
       },
       {
         path: '/MyPdfFiles',

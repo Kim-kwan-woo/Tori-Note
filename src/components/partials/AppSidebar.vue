@@ -23,7 +23,10 @@
           <b-collapse id="dashboard-dropdown">
             <ul class="nav flex-column sub-menu">
               <li class="nav-item">
-                <router-link class="nav-link" to="/">Lecture and Script</router-link>
+                <router-link class="nav-link" to="/">Live Lecture</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/Review/">Review Space</router-link>
               </li>
             </ul>
           </b-collapse>
