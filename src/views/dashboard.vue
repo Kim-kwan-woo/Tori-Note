@@ -56,6 +56,7 @@ import JQuery from 'jquery'
 import S3config from './Key.js'
 import axios from 'axios'
 let $ = JQuery
+
 export default {
   name: 'dashboard',
   data () {
@@ -85,6 +86,10 @@ export default {
     pieChart
   },
   methods: {
+    init: function () {
+      let stripeScript= document.createElement('script');
+      stripeScript.setAttribute('src', 'https://js.stripe.com/v3/');
+    },
     toggleProBanner: function () {
       $('body').toggleClass('pro-banner-collapse')
     },
@@ -158,16 +163,19 @@ export default {
       })
       this.mediaRecorder.stop()
       return new Promise((resolve, reject) => {
-        this.mediaRecorder.onstop = async function () {
+        this.mediaRecorder.onstop = function () {
           const file = new Blob(this.chunks, {type: 'audio/webm'})
           this.chunks = []
-          const fileName = 'audio_' + this.sending_index + '.webm'
-          await S3.putObject({
-            Bucket: S3config.Bucket,
-            Key: fileName,
-            ACL: 'public-read',
-            Body: file
-          }).promise()
+          const fileName = 'audio_' + this.sending_index + '.mp3'
+
+          W3Module.convertWebmToMP3(file).then(async (mp3Blob) => {
+            await S3.putObject({
+              Bucket: S3config.Bucket,
+              Key: fileName,
+              ACL: 'public-read',
+              Body: mp3Blob
+            }).promise()
+          })
           resolve()
         }.bind(this)
       })
