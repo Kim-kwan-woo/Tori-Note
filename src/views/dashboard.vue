@@ -55,6 +55,7 @@ import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
 import S3config from './Key.js'
 import axios from 'axios'
+import lamejs from 'lamejs'
 let $ = JQuery
 
 export default {
@@ -86,10 +87,6 @@ export default {
     pieChart
   },
   methods: {
-    init: function () {
-      let stripeScript= document.createElement('script');
-      stripeScript.setAttribute('src', 'https://js.stripe.com/v3/');
-    },
     toggleProBanner: function () {
       $('body').toggleClass('pro-banner-collapse')
     },
@@ -163,19 +160,17 @@ export default {
       })
       this.mediaRecorder.stop()
       return new Promise((resolve, reject) => {
-        this.mediaRecorder.onstop = function () {
-          const file = new Blob(this.chunks, {type: 'audio/webm'})
+        this.mediaRecorder.onstop = async function () {
+          var tmpFile = new Blob(this.chunks, {type: 'audio/webm'})
+          var file = await this.convertToMP3(tmpFile)
           this.chunks = []
           const fileName = 'audio_' + this.sending_index + '.mp3'
-
-          W3Module.convertWebmToMP3(file).then(async (mp3Blob) => {
-            await S3.putObject({
-              Bucket: S3config.Bucket,
-              Key: fileName,
-              ACL: 'public-read',
-              Body: mp3Blob
-            }).promise()
-          })
+          await S3.putObject({
+            Bucket: S3config.Bucket,
+            Key: fileName,
+            ACL: 'public-read',
+            Body: file
+          }).promise()
           resolve()
         }.bind(this)
       })
@@ -207,9 +202,10 @@ export default {
       this.mediaRecorder_Even.stop()
       return new Promise((resolve, reject) => {
         this.mediaRecorder_Even.onstop = async function () {
-          const file = new Blob(this.chunks_Even, {type: 'audio/webm'})
+          var tmpFile = new Blob(this.chunks_Even, {type: 'audio/webm'})
+          var file = await this.convertToMP3(tmpFile)
           this.chunks_Even = []
-          const fileName = 'audio_' + this.sending_index + '.webm'
+          const fileName = 'audio_' + this.sending_index + '.mp3'
           await S3.putObject({
             Bucket: S3config.Bucket,
             Key: fileName,
@@ -254,13 +250,13 @@ export default {
     },
     async OddrecordPer10s () {
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(9000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked()
       this.CaptureScreen()
     },
     async EvenrecordPer10s () {
       this.BtnRecordClicked_Even()
-      await this.setTimeoutPromise(9000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked_Even()
       this.CaptureScreen()
     },
@@ -287,9 +283,9 @@ export default {
         })
         while (this.StopPer10 === false) {
           this.OddrecordPer10s()
-          await this.setTimeoutPromise(8770)
+          await this.setTimeoutPromise(58770)
           this.EvenrecordPer10s()
-          await this.setTimeoutPromise(8770)
+          await this.setTimeoutPromise(58770)
         }
       }
     },
