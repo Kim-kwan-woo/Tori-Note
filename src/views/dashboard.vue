@@ -113,7 +113,7 @@ export default {
       })
     },
     imgClicked (script) {
-      var textarea = document.querySelector('textarea')
+      var textarea = document.querySelector('textarea#script')
       textarea.value = script
       axios.get('http://localhost:3000/')
         .then(res => {
