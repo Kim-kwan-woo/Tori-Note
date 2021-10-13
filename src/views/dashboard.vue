@@ -1,53 +1,20 @@
-<template lang="html">
-  <section class="Study">
-    <div class="row">
+<template lang='html'>
+  <section class='Study'>
+    <div class='row'>
       <div id="popPosition" class="popPosition card">
         <p>Tori Note가 여러분의 강의력을 높여줄게요!</p>
-        <textarea
-          id="title"
-          rows="1"
-          style="width:98%; margin-bottom:15px"
-          placeholder="Input your Note Title..."
-        ></textarea
-        ><br />
-        <b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"
-          ><i class="mdi mdi-note-plus"></i>Create</b-button
-        >
+        <textarea id="title" rows='1' style='width:98%; margin-bottom:15px' placeholder="Input your Note Title..."></textarea><br/>
+        <b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"><i class="mdi mdi-note-plus"></i>Create</b-button>
       </div>
-      <div style="position:relative; top:3px; left:3px; padding:2px;">
-        <img
-          v-on:click="Time_Line = !Time_Line"
-          id="toggle"
-          width="18px"
-          height="18px"
-          src="../assets/images/arrow_r.png"
-        />
-      </div>
-      <div
-        v-show="Time_Line"
-        class="col-md-1 grid-margin stretch-card timelineDiv"
-        id="timeline"
-      >
-        <div class="card">
-          <div
-            class="card-body d-flex flex-column"
-            style="padding-top:5%; padding-left:4%; padding-right:0%;"
-          >
-            <div class="col scroll type1">
-              <div
-                v-for="item of timeline"
-                v-bind:key="item"
-                class="card1"
-                style="border: solid 1px rgb(255, 255, 255);"
-              >
-                <div class="card-body" style="padding:0px;">
-                  <div class="row">
-                    <img
-                      width="100%"
-                      height="100%"
-                      src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg"
-                      @click="imgClicked(item.summary)"
-                    />
+      <div style='position:relative; top:3px; left:3px; padding:2px;'><img v-on:click="Time_Line=!Time_Line" id="toggle" width='18px' height='18px' src="../assets/images/arrow_r.png"></div>
+      <div v-show="Time_Line" class='col-md-1 grid-margin stretch-card timelineDiv' id='timeline'>
+        <div class='card'>
+          <div class='card-body d-flex flex-column' style='padding-top:5%; padding-left:4%; padding-right:0%;'>
+            <div class='col scroll type1'>
+              <div v-for="item of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
+                <div class='card-body' style='padding:0px;'>
+                  <div class='row'>
+                  <img width='100%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" @click="imgClicked(item.summary)">
                   </div>
                 </div>
               </div>
@@ -55,58 +22,26 @@
           </div>
         </div>
       </div>
-      <div class="col grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <h4 class="card-title mb-0">Video</h4>
-            <div
-              v-if="Record"
-              style="position:absolute; top:25px; right:160px;"
-            >
-              <b-button class="btn-fw btn-inverse-light" @click="StopPer10s"
-                ><i class="mdi mdi-stop"></i>Stop</b-button
-              >
-            </div>
-            <div v-else style="position:absolute; top:25px; right:160px;">
-              <b-button class="btn-fw btn-inverse-light" @click="ShowPopTitle"
-                ><i class="mdi mdi-step-forward"></i>Start</b-button
-              >
-            </div>
-            <div style="position:absolute; top:25px; right:25px;">
-              <b-button class="btn-fw btn-inverse-light" @click="ShareScreen"
-                ><i class="mdi mdi-desktop-mac"></i>Share</b-button
-              >
-            </div>
-            <br />
-            <video ref="videoElement" controls autoplay></video><br />
+      <div class='col grid-margin stretch-card'>
+        <div class='card'>
+          <div class='card-body'>
+            <h4 class='card-title mb-0'>Video</h4>
+            <div v-if="Record" style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="StopPer10s"><i class="mdi mdi-stop"></i>Stop</b-button></div>
+            <div v-else style='position:absolute; top:25px; right:160px;'><b-button class="btn-fw btn-inverse-light" @click="ShowPopTitle"><i class="mdi mdi-step-forward"></i>Start</b-button></div>
+            <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
+            <video ref="videoElement" controls autoplay></video><br/>
             <canvas></canvas>
           </div>
         </div>
       </div>
-      <div class="col-md-5 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <h4 class="card-title mb-0" id="script">Script</h4>
-            <br />
-            <div style="position:absolute; top:25px; right:25px;">
-              <b-button class="btn-fw btn-inverse-light" @click="editScript"
-                ><i class="mdi mdi-border-color"></i>Edit</b-button
-              >
-            </div>
-            <div class="col" style="padding-left:0px; padding-right:0px;">
-              <img
-                width="100%"
-                src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg"
-                style="margin-right:2%;"
-              />
-              <textarea
-                id="script"
-                class="scroll type1"
-                rows="5"
-                style="width:100%; border:none;"
-              >
-안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</textarea
-              >
+      <div class='col-md-5 grid-margin stretch-card'>
+        <div class='card'>
+          <div class='card-body'>
+            <h4 class='card-title mb-0' id='script'>Script</h4><br/>
+            <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+            <div class='col' style='padding-left:0px; padding-right:0px;'>
+              <img width='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" style='margin-right:2%;'>
+              <textarea id="script" class='scroll type1' rows='5' style='width:100%; border:none;'>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</textarea>
             </div>
           </div>
         </div>
@@ -114,6 +49,7 @@
     </div>
   </section>
 </template>
+
 <script lang="js">
 import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
