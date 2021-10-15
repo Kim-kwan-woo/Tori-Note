@@ -11,4 +11,6 @@ yarn-error.log
 
 Key.js
 
+src/assets/scss/shared/
+
 # End of https://www.toptal.com/developers/gitignore/api/vuejs
