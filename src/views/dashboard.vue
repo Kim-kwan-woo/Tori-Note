@@ -161,15 +161,16 @@ export default {
       this.mediaRecorder.stop()
       return new Promise((resolve, reject) => {
         this.mediaRecorder.onstop = async function () {
-          var tmpFile = new Blob(this.chunks, {type: 'audio/webm'})
-          var file = await this.convertToMP3(tmpFile)
+          var File = new Blob(this.chunks, {type: 'audio/webm'})
+          // var file = await this.convertToMP3(tmpFile)
           this.chunks = []
-          const fileName = 'audio_' + this.sending_index + '.mp3'
+          const fileName = 'audio_' + this.sending_index + '.webm'
           await S3.putObject({
             Bucket: S3config.Bucket,
             Key: fileName,
             ACL: 'public-read',
-            Body: file
+            Body: File,
+            ContentType: 'audio/mpeg'
           }).promise()
           resolve()
         }.bind(this)
@@ -202,15 +203,16 @@ export default {
       this.mediaRecorder_Even.stop()
       return new Promise((resolve, reject) => {
         this.mediaRecorder_Even.onstop = async function () {
-          var tmpFile = new Blob(this.chunks_Even, {type: 'audio/webm'})
-          var file = await this.convertToMP3(tmpFile)
+          var File = new Blob(this.chunks_Even, {type: 'audio/webm'})
+          // var file = await this.convertToMP3(tmpFile)
           this.chunks_Even = []
-          const fileName = 'audio_' + this.sending_index + '.mp3'
+          const fileName = 'audio_' + this.sending_index + '.webm'
           await S3.putObject({
             Bucket: S3config.Bucket,
             Key: fileName,
             ACL: 'public-read',
-            Body: file
+            Body: File,
+            ContentType: 'audio/webm'
           }).promise()
           resolve()
         }.bind(this)
