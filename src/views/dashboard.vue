@@ -57,7 +57,6 @@ import S3config from './Key.js'
 import axios from 'axios'
 import lamejs from 'lamejs'
 let $ = JQuery
-
 export default {
   name: 'dashboard',
   data () {
@@ -138,7 +137,7 @@ export default {
       if (typeof MediaRecorder.isTypeSupported === 'function') {
         var options = {
           bitsPerSecond: 80000,
-          mimeType: 'video/webm;codecs=opus' }
+          mimeType: 'audio/webm;codecs=opus' }
         this.mediaRecorder = new MediaRecorder(this.localstream, options)
       } else {
         this.mediaRecorder = new MediaRecorder(this.localstream)
@@ -161,7 +160,7 @@ export default {
       this.mediaRecorder.stop()
       return new Promise((resolve, reject) => {
         this.mediaRecorder.onstop = async function () {
-          var File = new Blob(this.chunks, {type: 'video/webm'})
+          var File = new Blob(this.chunks, {type: 'audio/webm'})
           // var file = await this.convertToMP3(tmpFile)
           this.chunks = []
           const fileName = 'audio_' + this.sending_index + '.webm'
@@ -170,7 +169,7 @@ export default {
             Key: fileName,
             ACL: 'public-read',
             Body: File,
-            ContentType: 'video/mpeg'
+            ContentType: 'audio/mpeg'
           }).promise()
           resolve()
         }.bind(this)
@@ -180,7 +179,7 @@ export default {
       if (typeof MediaRecorder.isTypeSupported === 'function') {
         var options = {
           bitsPerSecond: 80000,
-          mimeType: 'video/webm;codecs=opus' }
+          mimeType: 'audio/webm;codecs=opus' }
         this.mediaRecorder_Even = new MediaRecorder(this.localstream, options)
       } else {
         this.mediaRecorder_Even = new MediaRecorder(this.localstream)
@@ -203,7 +202,7 @@ export default {
       this.mediaRecorder_Even.stop()
       return new Promise((resolve, reject) => {
         this.mediaRecorder_Even.onstop = async function () {
-          var File = new Blob(this.chunks_Even, {type: 'video/webm'})
+          var File = new Blob(this.chunks_Even, {type: 'audio/webm'})
           // var file = await this.convertToMP3(tmpFile)
           this.chunks_Even = []
           const fileName = 'audio_' + this.sending_index + '.webm'
@@ -212,7 +211,7 @@ export default {
             Key: fileName,
             ACL: 'public-read',
             Body: File,
-            ContentType: 'video/webm'
+            ContentType: 'audio/webm'
           }).promise()
           resolve()
         }.bind(this)
@@ -252,13 +251,13 @@ export default {
     },
     async OddrecordPer10s () {
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(9000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked()
       this.CaptureScreen()
     },
     async EvenrecordPer10s () {
       this.BtnRecordClicked_Even()
-      await this.setTimeoutPromise(9000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked_Even()
       this.CaptureScreen()
     },
@@ -285,9 +284,9 @@ export default {
         })
         while (this.StopPer10 === false) {
           this.OddrecordPer10s()
-          await this.setTimeoutPromise(8770)
+          await this.setTimeoutPromise(58770)
           this.EvenrecordPer10s()
-          await this.setTimeoutPromise(8770)
+          await this.setTimeoutPromise(58770)
         }
       }
     },
