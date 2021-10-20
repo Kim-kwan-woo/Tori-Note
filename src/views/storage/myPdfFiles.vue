@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <div class='col grid-margin stretch-card'>
+        <div class='col grid-margin stretch-card' ref="pdfarea">
           <div class='card' style="border: solid 1px rgb(223, 223, 223); box-shadow: none;">
             <div class='card-body'>
               <h4 class='card-title mb-0' id='script'>Script</h4><br/>
@@ -45,7 +45,7 @@
         </div>
       </div>
       <div style="text-align: center;">
-        <b-button class="btn-fw btn-inverse-link" @click="clicktest"><i class="mdi mdi-file-pdf-box"></i>Save</b-button>
+        <b-button class="btn-fw btn-inverse-link" @click="exportToPDF"><i class="mdi mdi-file-pdf-box"></i>Save</b-button>
         <b-button class="btn-fw btn-inverse-link" @click="closeReview"><i class="mdi mdi-window-close"></i>Exit</b-button>
       </div>
     </div> <!-- 까지 열람 팝업 -->
@@ -69,6 +69,8 @@
 </template>
 
 <script lang="js">
+import html2pdf from 'html2pdf.js'
+
 export default {
   name: 'myPdfFiles',
   data () {
@@ -87,7 +89,8 @@ export default {
         { name: '2021-09-20-19-20.pdf', date: '20210920' },
         { name: '2021-09-18-17-55.pdf', date: '20210918' },
         { name: '2021-09-20-11-30.pdf', date: '20210920' }
-      ]
+      ],
+      propTitle: 'mypdf'
     }
   },
   computed: {
@@ -111,6 +114,19 @@ export default {
     closeReview () {
       const pop = document.getElementById('popPosition')
       pop.style.display = 'none'
+    },
+    exportToPDF () {
+      // window.scrollTo(0, 0);
+      html2pdf(this.$refs.pdfarea, {
+        margin: 0,
+        filename: 'document.pdf',
+        image: {type: 'jpg', quality: 0.95},
+        // allowTaint 옵션추가
+        html2canvas: {
+          useCORS: true, scrollY: 0, scale: 1, dpi: 300, letterRendering: true, allowTaint: false
+        },
+        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4', compressPDF: true }
+      })
     }
   }
 }
