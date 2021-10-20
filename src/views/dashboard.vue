@@ -11,10 +11,10 @@
         <div class='card'>
           <div class='card-body d-flex flex-column' style='padding-top:5%; padding-left:4%; padding-right:0%;'>
             <div class='col scroll type1'>
-              <div v-for="item of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
+              <div v-for="(item, index) of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
                 <div class='card-body' style='padding:0px;'>
                   <div class='row'>
-                  <img width='100%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" @click="imgClicked(item.summary)">
+                  <img width='100%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" @click="imgClicked(index)">
                   </div>
                 </div>
               </div>
@@ -53,7 +53,6 @@
 <script lang="js">
 import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
-import axios from 'axios'
 
 let $ = JQuery
 export default {
@@ -79,7 +78,9 @@ export default {
       chunks_Even: [],
       sending_index: {}, // 파일 이름에 인덱스
       Title: {}, // 사용자가 입력한 강의 제목
-      curDate: {} // 사용자가 강의 제목 입력했을 때의 시간
+      fileID: {}, // 현재 강의의 파일명
+      curDate: {}, // 사용자가 강의 제목 입력했을 때의 시간
+      imgIndex: {} // 사용자가 조회, 수정하고자 하는 스크립트의 슬라이드 번호
     }
   },
   components: {
@@ -111,22 +112,38 @@ export default {
         setTimeout(() => resolve(), ms)
       })
     },
-    imgClicked (script) {
-      var textarea = document.querySelector('textarea#script')
-      textarea.value = script
-      axios.get('http://localhost:3000/')
-        .then(res => {
-          console.log(res.data)
-        })
+    imgClicked (index) {
+      this.imgIndex = index
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/script/slide',
+        data: {
+          'lecture_name': this.Title,
+          'date': this.curDate,
+          'id': this.fileID + '_' + this.imgIndex,
+          'start': this.imgIndex
+        },
+        dataType: 'json',
+        success: function (data) {
+          var textarea = document.querySelector('textarea#script')
+          textarea.value = data
+        }
+      }).catch(error => {
+        console.log(error.message)
+      })
     },
     editScript () {
       var textarea = document.querySelector('textarea#script')
       var editScript = textarea.value
       $.ajax({
-        type: 'post',
-        url: 'http://localhost:3000/',
+        type: 'POST',
+        url: 'http://localhost:3000/script/modify',
         data: {
-          'summary': editScript
+          'lecture_name': this.Title,
+          'date': this.curDate,
+          'id': this.fileID + '_' + this.imgIndex,
+          'start': this.imgIndex,
+          'content': editScript
         },
         dataType: 'json'
       }).catch(error => {
@@ -163,10 +180,10 @@ export default {
             array.push(decodImg.charCodeAt(i))
           }
           const image = new Blob([new Uint8Array(array)], {type: 'image/png'})
-          const ImagefileName = this.Title + '_' + this.sending_index + '.png' // 여기까지 스크린샷
+          const ImagefileName = this.fileID + '_' + this.sending_index + '.png' // 여기까지 스크린샷
 
           const audio = new Blob(this.chunks, {type: 'video/webm'})
-          const AudiofileName = this.Title + '_' + this.sending_index++ + '.webm'
+          const AudiofileName = this.fileID + '_' + this.sending_index++ + '.webm'
           this.chunks = []
 
           let formData = new FormData()
@@ -220,10 +237,10 @@ export default {
             array.push(decodImg.charCodeAt(i))
           }
           const image = new Blob([new Uint8Array(array)], {type: 'image/png'})
-          const ImagefileName = this.Title + '_' + this.sending_index + '.png' // 여기까지 스크린샷
+          const ImagefileName = this.fileID + '_' + this.sending_index + '.png' // 여기까지 스크린샷
 
           const audio = new Blob(this.chunks_Even, {type: 'video/webm'})
-          const AudiofileName = this.Title + '_' + this.sending_index++ + '.webm'
+          const AudiofileName = this.fileID + '_' + this.sending_index++ + '.webm'
           this.chunks_Even = []
 
           let formData = new FormData()
@@ -258,11 +275,25 @@ export default {
       this.BtnRecordClicked()
       await this.setTimeoutPromise(59000)
       await this.BtnStopClicked()
+      this.RequestImg()
     },
     async EvenrecordPer10s () {
       this.BtnRecordClicked_Even()
       await this.setTimeoutPromise(59000)
       await this.BtnStopClicked_Even()
+      this.RequestImg()
+    },
+    RequestImg () {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/timeline/images',
+        dataType: 'json',
+        success: function (data) {
+          console.log(data)
+        }
+      }).catch(error => {
+        console.log(error.message)
+      })
     },
     async AllrecordPer10s () {
       const pop = document.getElementById('popPosition')
@@ -273,6 +304,8 @@ export default {
 
       var now = new Date()
       this.curDate = now.getFullYear() + '' + (now.getMonth() + 1) + '' + now.getDate()
+
+      this.fileID = Math.floor(Math.random() * 10000000)
 
       if (this.Title === '') {
         alert('제목을 입력하세요!')
