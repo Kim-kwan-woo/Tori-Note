@@ -162,8 +162,8 @@ export default {
           for (let i = 0; i < decodImg.length; i++) {
             array.push(decodImg.charCodeAt(i))
           }
-          const image = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
-          const ImagefileName = this.Title + '_' + this.sending_index + '.jpeg' // 여기까지 스크린샷
+          const image = new Blob([new Uint8Array(array)], {type: 'image/png'})
+          const ImagefileName = this.Title + '_' + this.sending_index + '.png' // 여기까지 스크린샷
 
           const audio = new Blob(this.chunks, {type: 'video/webm'})
           const AudiofileName = this.Title + '_' + this.sending_index++ + '.webm'
@@ -176,9 +176,10 @@ export default {
           formData.append('upload', audio, AudiofileName)
 
           $.ajax({
-            type: 'post',
+            type: 'POST',
             url: 'http://localhost:3000/stream',
             cache: false,
+            enctype: 'multipart/form-data',
             data: formData,
             processData: false,
             contentType: false
@@ -218,8 +219,8 @@ export default {
           for (let i = 0; i < decodImg.length; i++) {
             array.push(decodImg.charCodeAt(i))
           }
-          const image = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
-          const ImagefileName = this.Title + '_' + this.sending_index + '.jpeg' // 여기까지 스크린샷
+          const image = new Blob([new Uint8Array(array)], {type: 'image/png'})
+          const ImagefileName = this.Title + '_' + this.sending_index + '.png' // 여기까지 스크린샷
 
           const audio = new Blob(this.chunks_Even, {type: 'video/webm'})
           const AudiofileName = this.Title + '_' + this.sending_index++ + '.webm'
@@ -232,9 +233,10 @@ export default {
           formData.append('upload', audio, AudiofileName)
 
           $.ajax({
-            type: 'post',
+            type: 'POST',
             url: 'http://localhost:3000/stream',
             cache: false,
+            enctype: 'multipart/form-data',
             data: formData,
             processData: false,
             contentType: false
@@ -254,12 +256,12 @@ export default {
     },
     async OddrecordPer10s () {
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(9000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked()
     },
     async EvenrecordPer10s () {
       this.BtnRecordClicked_Even()
-      await this.setTimeoutPromise(9000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked_Even()
     },
     async AllrecordPer10s () {
@@ -279,9 +281,9 @@ export default {
         this.StopPer10 = false
         while (this.StopPer10 === false) {
           this.OddrecordPer10s()
-          await this.setTimeoutPromise(8770)
-          this.OddrecordPer10s()
-          await this.setTimeoutPromise(8770)
+          await this.setTimeoutPromise(58770)
+          this.EvenrecordPer10s()
+          await this.setTimeoutPromise(58770)
         }
       }
     },
