@@ -189,11 +189,14 @@ export default {
       var editScript = textarea.value
       $.ajax({
         type: 'post',
-        url: 'http://localhost:3000/',
+        url: 'http://localhost:5000/summary',
         data: {
-          'editScript': editScript
+          'text': editScript
         },
-        dataType: 'json'
+        dataType: 'json',
+        success: function (result) {
+          alert('result=' + result['summary'])
+        }
       }).catch(error => {
         console.log(error.message)
       })
@@ -202,7 +205,7 @@ export default {
       if (typeof MediaRecorder.isTypeSupported === 'function') {
         var options = {
           bitsPerSecond: 80000,
-          mimeType: 'audio/webm;codecs=opus' }
+          mimeType: 'video/webm;codecs=opus' }
         this.mediaRecorder = new MediaRecorder(this.localstream, options)
       } else {
         this.mediaRecorder = new MediaRecorder(this.localstream)
@@ -225,15 +228,16 @@ export default {
       this.mediaRecorder.stop()
       return new Promise((resolve, reject) => {
         this.mediaRecorder.onstop = async function () {
-          var tmpFile = new Blob(this.chunks, {type: 'audio/webm'})
-          var file = await this.convertToMP3(tmpFile)
+          var tmpFile = new Blob(this.chunks, {type: 'video/webm'})
+          // var file = await this.convertToMP3(tmpFile)
           this.chunks = []
-          const fileName = 'audio_' + this.sending_index + '.mp3'
+          const fileName = 'audio_' + this.sending_index + '.webm'
           await S3.putObject({
             Bucket: S3config.Bucket,
             Key: fileName,
             ACL: 'public-read',
-            Body: file
+            Body: tmpFile,
+            ContentType: 'audio/mpeg'
           }).promise()
           resolve()
         }.bind(this)
@@ -243,7 +247,7 @@ export default {
       if (typeof MediaRecorder.isTypeSupported === 'function') {
         var options = {
           bitsPerSecond: 80000,
-          mimeType: 'audio/webm;codecs=opus' }
+          mimeType: 'video/webm;codecs=opus' }
         this.mediaRecorder_Even = new MediaRecorder(this.localstream, options)
       } else {
         this.mediaRecorder_Even = new MediaRecorder(this.localstream)
@@ -266,14 +270,15 @@ export default {
       this.mediaRecorder_Even.stop()
       return new Promise((resolve, reject) => {
         this.mediaRecorder_Even.onstop = async function () {
-          const file = new Blob(this.chunks_Even, {type: 'audio/webm'})
+          const file = new Blob(this.chunks_Even, {type: 'video/webm'})
           this.chunks_Even = []
           const fileName = 'audio_' + this.sending_index + '.webm'
           await S3.putObject({
             Bucket: S3config.Bucket,
             Key: fileName,
             ACL: 'public-read',
-            Body: file
+            Body: file,
+            ContentType: 'audio/mpeg'
           }).promise()
           resolve()
         }.bind(this)
