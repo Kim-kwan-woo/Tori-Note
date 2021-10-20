@@ -19,9 +19,12 @@
         </div>
         <div class='col grid-margin stretch-card'>
           <div class='card' style="border: solid 1px rgb(223, 223, 223); box-shadow: none; text-align: center;">
-            <div class='card-body'>
+            <div class='card-body' style='padding-left:10px; padding-right:10px;'>
               <h4 class='card-title mb-0' id='script'>자료구조 2019.10.30.</h4><br/>
               <img width='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg">
+              <audio class="player" controls ref="player" style="width: 100%; margin-top:20px;">
+                <source src="" ref="source">
+              </audio>
             </div>
           </div>
         </div>

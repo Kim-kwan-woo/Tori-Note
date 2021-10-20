@@ -69,17 +69,17 @@ export default {
         {key_word: '마무리', time: '22:00 - 35:00', summary: '오늘 수업은 여기서 마무리하겠습니다.'},
         {key_word: '과제', time: '35:00 - 52:20', summary: '다음주까지 나만의 노트 정리하기 과제입니다.'}
       ],
+      StopPer10: false, // true면 녹화 중지
+      Record: false, // true면 녹화 시작
+      Time_Line: true, // 이건 걍 타임라인 토글 역할
       localStream: {},
       mediaRecorder: {},
       chunks: [],
       mediaRecorder_Even: {},
       chunks_Even: [],
-      sending_index: {},
-      curScript: {},
-      StopPer10: false,
-      Record: false,
-      Time_Line: true,
-      Title: {}
+      sending_index: {}, // 파일 이름에 인덱스
+      Title: {}, // 사용자가 입력한 강의 제목
+      curDate: {} // 사용자가 강의 제목 입력했을 때의 시간
     }
   },
   components: {
@@ -126,7 +126,7 @@ export default {
         type: 'post',
         url: 'http://localhost:3000/',
         data: {
-          'editScript': editScript
+          'summary': editScript
         },
         dataType: 'json'
       }).catch(error => {
@@ -147,18 +147,37 @@ export default {
         this.chunks.push(e.data)
       }.bind(this)
     },
-    BtnStopClicked () {
+    BtnStopClicked () { // CaptureScreen이랑 합쳐
       this.mediaRecorder.stop()
       return new Promise((resolve, reject) => {
         this.mediaRecorder.onstop = async function () {
-          var file = new Blob(this.chunks, {type: 'video/webm'})
+          const video = document.querySelector('video') // 여기부터
+          const canvas = window.canvas = document.querySelector('canvas')
+          canvas.width = video.videoWidth
+          canvas.height = video.videoHeight
+          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
+          const imgBase64 = canvas.toDataURL('image/jpeg', 'image/octet-stream')
+          const decodImg = atob(imgBase64.split(',')[1])
+          let array = []
+          for (let i = 0; i < decodImg.length; i++) {
+            array.push(decodImg.charCodeAt(i))
+          }
+          const image = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
+          const ImagefileName = this.Title + '_' + this.sending_index + '.jpeg' // 여기까지 스크린샷
+
+          const audio = new Blob(this.chunks, {type: 'video/webm'})
+          const AudiofileName = this.Title + '_' + this.sending_index++ + '.webm'
           this.chunks = []
-          const fileName = this.Title + '_' + this.sending_index + '.webm'
+
           let formData = new FormData()
-          formData.append('audio', file, fileName)
+          formData.append('upload', image, ImagefileName)
+          formData.append('lecture_name', this.Title)
+          formData.append('date', this.curDate)
+          formData.append('upload', audio, AudiofileName)
+
           $.ajax({
             type: 'post',
-            url: 'http://localhost:3000/',
+            url: 'http://localhost:3000/stream',
             cache: false,
             data: formData,
             processData: false,
@@ -184,18 +203,37 @@ export default {
         this.chunks_Even.push(e.data)
       }.bind(this)
     },
-    BtnStopClicked_Even () {
+    BtnStopClicked_Even () { // CaptureScreen이랑 합쳐
       this.mediaRecorder_Even.stop()
       return new Promise((resolve, reject) => {
         this.mediaRecorder_Even.onstop = async function () {
-          var file = new Blob(this.chunks_Even, {type: 'video/webm'})
+          const video = document.querySelector('video') // 여기부터
+          const canvas = window.canvas = document.querySelector('canvas')
+          canvas.width = video.videoWidth
+          canvas.height = video.videoHeight
+          canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
+          const imgBase64 = canvas.toDataURL('image/jpeg', 'image/octet-stream')
+          const decodImg = atob(imgBase64.split(',')[1])
+          let array = []
+          for (let i = 0; i < decodImg.length; i++) {
+            array.push(decodImg.charCodeAt(i))
+          }
+          const image = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
+          const ImagefileName = this.Title + '_' + this.sending_index + '.jpeg' // 여기까지 스크린샷
+
+          const audio = new Blob(this.chunks_Even, {type: 'video/webm'})
+          const AudiofileName = this.Title + '_' + this.sending_index++ + '.webm'
           this.chunks_Even = []
-          const fileName = this.Title + '_' + this.sending_index + '.webm'
+
           let formData = new FormData()
-          formData.append('audio', file, fileName)
+          formData.append('upload', image, ImagefileName)
+          formData.append('lecture_name', this.Title)
+          formData.append('date', this.curDate)
+          formData.append('upload', audio, AudiofileName)
+
           $.ajax({
             type: 'post',
-            url: 'http://localhost:3000/',
+            url: 'http://localhost:3000/stream',
             cache: false,
             data: formData,
             processData: false,
@@ -213,70 +251,37 @@ export default {
       const testdata = [{'imgURL': 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAABWoAAAM...'}]
       testimg.src = testdata[0].imgURL
       */
-      const video = document.querySelector('video')
-      const canvas = window.canvas = document.querySelector('canvas')
-      canvas.width = video.videoWidth
-      canvas.height = video.videoHeight
-      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
-      const imgBase64 = canvas.toDataURL('image/jpeg', 'image/octet-stream')
-      const decodImg = atob(imgBase64.split(',')[1])
-      let array = []
-      for (let i = 0; i < decodImg.length; i++) {
-        array.push(decodImg.charCodeAt(i))
-      }
-      const file = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
-      const fileName = this.Title + '_' + this.sending_index++ + '.jpeg'
-      let formData = new FormData()
-      formData.append('upload', file, fileName)
-      $.ajax({
-        type: 'post',
-        url: 'http://localhost:3000/upload',
-        cache: false,
-        data: formData,
-        processData: false,
-        contentType: false
-      }).catch(error => {
-        console.log(error.message)
-      })
     },
     async OddrecordPer10s () {
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(59000)
+      await this.setTimeoutPromise(9000)
       await this.BtnStopClicked()
-      this.CaptureScreen()
     },
     async EvenrecordPer10s () {
       this.BtnRecordClicked_Even()
-      await this.setTimeoutPromise(59000)
+      await this.setTimeoutPromise(9000)
       await this.BtnStopClicked_Even()
-      this.CaptureScreen()
     },
     async AllrecordPer10s () {
       const pop = document.getElementById('popPosition')
       pop.style.display = 'none'
+
       var textarea = document.querySelector('textarea#title')
       this.Title = textarea.value
-      console.log(this.Title)
+
+      var now = new Date()
+      this.curDate = now.getFullYear() + '' + (now.getMonth() + 1) + '' + now.getDate()
+
       if (this.Title === '') {
         alert('제목을 입력하세요!')
       } else {
         this.Record = true
         this.StopPer10 = false
-        $.ajax({
-          type: 'post',
-          url: 'http://localhost:3000/',
-          data: {
-            'title': this.Title
-          },
-          dataType: 'json'
-        }).catch(error => {
-          console.log(error.message)
-        })
         while (this.StopPer10 === false) {
           this.OddrecordPer10s()
-          await this.setTimeoutPromise(58770)
-          this.EvenrecordPer10s()
-          await this.setTimeoutPromise(58770)
+          await this.setTimeoutPromise(8770)
+          this.OddrecordPer10s()
+          await this.setTimeoutPromise(8770)
         }
       }
     },
