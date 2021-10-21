@@ -6,15 +6,16 @@
         <textarea id="title" rows='1' style='width:98%; margin-bottom:15px' placeholder="Input your Note Title..."></textarea><br/>
         <b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"><i class="mdi mdi-note-plus"></i>Create</b-button>
       </div>
+      <b-button class="btn-fw btn-inverse-light" @click="test" style="display:none">test</b-button>
       <div style='position:relative; top:3px; left:3px; padding:2px;'><img v-on:click="Time_Line=!Time_Line" id="toggle" width='18px' height='18px' src="../assets/images/arrow_r.png"></div>
       <div v-show="Time_Line" class='col-md-1 grid-margin stretch-card timelineDiv' id='timeline'>
         <div class='card'>
           <div class='card-body d-flex flex-column' style='padding-top:5%; padding-left:4%; padding-right:0%;'>
             <div class='col scroll type1'>
-              <div v-for="item of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
+              <div v-for="(item, index) of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
                 <div class='card-body' style='padding:0px;'>
                   <div class='row'>
-                  <img width='100%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" @click="imgClicked(item.summary)">
+                  <img width='100%' height='100%' v-bind:src='item.imgURL' @click="imgClicked(item.imgURL, index)">
                   </div>
                 </div>
               </div>
@@ -40,7 +41,7 @@
             <h4 class='card-title mb-0' id='script'>Script</h4><br/>
             <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
             <div class='col' style='padding-left:0px; padding-right:0px;'>
-              <img width='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" style='margin-right:2%;'>
+              <img id="scriptIMG" width='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" style='margin-right:2%;'>
               <textarea id="script" class='scroll type1' rows='5' style='width:100%; border:none;'>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</textarea>
             </div>
           </div>
@@ -53,21 +54,15 @@
 <script lang="js">
 import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
-import axios from 'axios'
 
 let $ = JQuery
+
 export default {
   name: 'dashboard',
   data () {
     return {
       timeline: [
-        {key_word: '시작', time: '00:00 - 12:00', summary: '지금부터 수업 시작하겠습니다.'},
-        {key_word: '자료 구조', time: '12:00 - 15:00', summary: '오늘은 지난주에 이어 자료구조를 하겠습니다.'},
-        {key_word: '스택', time: '15:00 - 22:00', summary: '스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행됩니다.'},
-        {key_word: '마무리', time: '22:00 - 35:00', summary: '오늘 수업은 여기서 마무리하겠습니다.'},
-        {key_word: '스택', time: '15:00 - 22:00', summary: '스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행됩니다.'},
-        {key_word: '마무리', time: '22:00 - 35:00', summary: '오늘 수업은 여기서 마무리하겠습니다.'},
-        {key_word: '과제', time: '35:00 - 52:20', summary: '다음주까지 나만의 노트 정리하기 과제입니다.'}
+        {imgURL: 'https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg', id: 'temp'}
       ],
       StopPer10: false, // true면 녹화 중지
       Record: false, // true면 녹화 시작
@@ -79,7 +74,9 @@ export default {
       chunks_Even: [],
       sending_index: {}, // 파일 이름에 인덱스
       Title: {}, // 사용자가 입력한 강의 제목
-      curDate: {} // 사용자가 강의 제목 입력했을 때의 시간
+      fileID: {}, // 현재 강의의 파일명
+      curDate: {}, // 사용자가 강의 제목 입력했을 때의 시간
+      imgIndex: {} // 사용자가 조회, 수정하고자 하는 스크립트의 슬라이드 번호
     }
   },
   components: {
@@ -111,22 +108,58 @@ export default {
         setTimeout(() => resolve(), ms)
       })
     },
-    imgClicked (script) {
-      var textarea = document.querySelector('textarea#script')
-      textarea.value = script
-      axios.get('http://localhost:3000/')
-        .then(res => {
-          console.log(res.data)
-        })
+    // test () {
+    // this.timeline.push({imgURL: 'https://img.insight.co.kr/static/2016/02/15/700/yy1275us791rlld79jxb.jpg', id: 'temp'})
+    // },
+    RequestImg () {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/timeline/images',
+        dataType: 'json',
+        success: function (data) {
+          // this.timeline.push({imgURL: 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAABWoAAAM...', id: 'temp'})
+          this.timeline.push({imgURL: data[0].imgURL, id: data[0].id})
+        }
+      }).catch(error => {
+        console.log(error.message)
+      })
+    },
+    imgClicked (imgURL, index) {
+      const scriptIMG = document.getElementById('scriptIMG')
+      scriptIMG.src = imgURL
+
+      this.imgIndex = index
+      console.log(index)
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/script/slide',
+        data: {
+          'lecture_name': this.Title,
+          'date': this.curDate,
+          'id': this.fileID + '_' + this.imgIndex,
+          'start': this.imgIndex
+        },
+        dataType: 'json',
+        success: function (data) {
+          var textarea = document.querySelector('textarea#script')
+          textarea.value = data
+        }
+      }).catch(error => {
+        console.log(error.message)
+      })
     },
     editScript () {
       var textarea = document.querySelector('textarea#script')
       var editScript = textarea.value
       $.ajax({
-        type: 'post',
-        url: 'http://localhost:5000/summary',
+        type: 'POST',
+        url: 'http://localhost:3000/script/modify',
         data: {
-          'text': editScript
+          'lecture_name': this.Title,
+          'date': this.curDate,
+          'id': this.fileID + '_' + this.imgIndex,
+          'start': this.imgIndex,
+          'content': editScript
         },
         dataType: 'json',
         success: function (result) {
@@ -165,11 +198,11 @@ export default {
           for (let i = 0; i < decodImg.length; i++) {
             array.push(decodImg.charCodeAt(i))
           }
-          const image = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
-          const ImagefileName = this.Title + '_' + this.sending_index + '.jpeg' // 여기까지 스크린샷
+          const image = new Blob([new Uint8Array(array)], {type: 'image/png'})
+          const ImagefileName = this.fileID + '_' + this.sending_index + '.png' // 여기까지 스크린샷
 
           const audio = new Blob(this.chunks, {type: 'video/webm'})
-          const AudiofileName = this.Title + '_' + this.sending_index++ + '.webm'
+          const AudiofileName = this.fileID + '_' + this.sending_index++ + '.webm'
           this.chunks = []
 
           let formData = new FormData()
@@ -179,9 +212,10 @@ export default {
           formData.append('upload', audio, AudiofileName)
 
           $.ajax({
-            type: 'post',
+            type: 'POST',
             url: 'http://localhost:3000/stream',
             cache: false,
+            enctype: 'multipart/form-data',
             data: formData,
             processData: false,
             contentType: false
@@ -221,11 +255,11 @@ export default {
           for (let i = 0; i < decodImg.length; i++) {
             array.push(decodImg.charCodeAt(i))
           }
-          const image = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
-          const ImagefileName = this.Title + '_' + this.sending_index + '.jpeg' // 여기까지 스크린샷
+          const image = new Blob([new Uint8Array(array)], {type: 'image/png'})
+          const ImagefileName = this.fileID + '_' + this.sending_index + '.png' // 여기까지 스크린샷
 
           const audio = new Blob(this.chunks_Even, {type: 'video/webm'})
-          const AudiofileName = this.Title + '_' + this.sending_index++ + '.webm'
+          const AudiofileName = this.fileID + '_' + this.sending_index++ + '.webm'
           this.chunks_Even = []
 
           let formData = new FormData()
@@ -235,9 +269,10 @@ export default {
           formData.append('upload', audio, AudiofileName)
 
           $.ajax({
-            type: 'post',
+            type: 'POST',
             url: 'http://localhost:3000/stream',
             cache: false,
+            enctype: 'multipart/form-data',
             data: formData,
             processData: false,
             contentType: false
@@ -248,22 +283,17 @@ export default {
         }.bind(this)
       })
     },
-    CaptureScreen () {
-      /*
-      const testimg = document.getElementById('123')
-      const testdata = [{'imgURL': 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAABWoAAAM...'}]
-      testimg.src = testdata[0].imgURL
-      */
-    },
     async OddrecordPer10s () {
       this.BtnRecordClicked()
-      await this.setTimeoutPromise(9000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked()
+      this.RequestImg()
     },
     async EvenrecordPer10s () {
       this.BtnRecordClicked_Even()
-      await this.setTimeoutPromise(9000)
+      await this.setTimeoutPromise(59000)
       await this.BtnStopClicked_Even()
+      this.RequestImg()
     },
     async AllrecordPer10s () {
       const pop = document.getElementById('popPosition')
@@ -275,6 +305,8 @@ export default {
       var now = new Date()
       this.curDate = now.getFullYear() + '' + (now.getMonth() + 1) + '' + now.getDate()
 
+      this.fileID = Math.floor(Math.random() * 10000000)
+
       if (this.Title === '') {
         alert('제목을 입력하세요!')
       } else {
@@ -282,9 +314,9 @@ export default {
         this.StopPer10 = false
         while (this.StopPer10 === false) {
           this.OddrecordPer10s()
-          await this.setTimeoutPromise(8770)
-          this.OddrecordPer10s()
-          await this.setTimeoutPromise(8770)
+          await this.setTimeoutPromise(58770)
+          this.EvenrecordPer10s()
+          await this.setTimeoutPromise(58770)
         }
       }
     },

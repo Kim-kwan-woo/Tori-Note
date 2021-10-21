@@ -1,76 +1,102 @@
 <template lang="html">
-  <section class="myPdfFiles">
-    <div class="popPosition card" id="popPosition">
-      <div class='row'>
-        <div class='col-md-2 grid-margin stretch-card' id='timeline'>
-          <div class='card' style="border: solid 1px rgb(223, 223, 223); box-shadow: none;">
-            <div class='card-body d-flex flex-column' style='padding-top:5%; padding-left:4%; padding-right:0%;'>
-              <div class='col scroll type1'>
-                <div v-for="item of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
-                  <div class='card-body' style='padding:0px;'>
-                    <div class='row'>
-                      <img width='100%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" @click="imgClicked(item.summary)">
+    <section class="myPdfFiles">
+      <vue-html2pdf
+        :show-layout="true"
+        :float-layout="false"
+        :enable-download="true"
+        :preview-modal="true"
+        :paginate-elements-by-height="500"
+        filename="hee hee"
+        :pdf-quality="2"
+        :manual-pagination="false"
+        pdf-format="a4"
+        pdf-orientation="landscape"
+        pdf-content-width="500px"
+        @progress="onProgress($event)"
+        @hasStartedGeneration="hasStartedGeneration()"
+        @hasGenerated="hasGenerated($event)"
+        ref="html2Pdf"
+      >
+      <section class="pdf-content">
+      <div class="popPosition card" id="popPosition">
+        <div class='row'>
+          <div class='col-md-2 grid-margin stretch-card' id='timeline'>
+            <div class='card' style="border: solid 1px rgb(223, 223, 223); box-shadow: none;">
+              <div class='card-body d-flex flex-column' style='padding-top:5%; padding-left:4%; padding-right:0%;'>
+                <div class='col scroll type1'>
+                  <div v-for="item of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
+                    <div class='card-body' style='padding:0px;'>
+                      <div class='row'>
+                        <img width='100%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" @click="imgClicked(item.summary)">
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+              <div class='col grid-margin stretch-card pdf-item'>
+                <div class='card' style="border: solid 1px rgb(223, 223, 223); box-shadow: none; text-align: center;">
+                  <div class='card-body' style='padding-left:10px; padding-right:10px;'>
+                    <h4 class='card-title mb-0' id='script'>자료구조 2019.10.30.</h4><br/>
+                    <img width='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg">
+                    <audio class="player" controls ref="player" style="width: 100%; margin-top:20px;">
+                      <source src="" ref="source">
+                    </audio>
+                  </div>
+                </div>
+              </div>
+              <div class='col grid-margin stretch-card pdf-item'>
+                <div class='card' style="border: solid 1px rgb(223, 223, 223); box-shadow: none;">
+                  <div class='card-body'>
+                    <h4 class='card-title mb-0' id='script'>Script</h4><br/>
+                    <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+                    <div class='col' style='padding-left:0px; padding-right:0px;'>
+                      <textarea id="script" class='scroll type1' rows='7' style='width:100%; border:none;'>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</textarea>
+                    </div>
+                    <h4 class='card-title mb-0' id='script'>Summary</h4><br/>
+                    <div class='col' style='padding-left:0px; padding-right:0px;'>
+                      <textarea id="script" class='scroll type1' rows='5' style='width:100%; border:none;'>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
-        <div class='col grid-margin stretch-card'>
-          <div class='card' style="border: solid 1px rgb(223, 223, 223); box-shadow: none; text-align: center;">
-            <div class='card-body' style='padding-left:10px; padding-right:10px;'>
-              <h4 class='card-title mb-0' id='script'>자료구조 2019.10.30.</h4><br/>
-              <img width='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg">
-              <audio class="player" controls ref="player" style="width: 100%; margin-top:20px;">
-                <source src="" ref="source">
-              </audio>
+        <div style="text-align: center;">
+          <b-button class="btn-fw btn-inverse-link" @click="exportToPDF"><i class="mdi mdi-file-pdf-box"></i>Save</b-button>
+          <b-button class="btn-fw btn-inverse-link" @click="closeReview"><i class="mdi mdi-window-close"></i>Exit</b-button>
+        </div>
+      </div> <!-- 까지 열람 팝업 -->
+      </section>
+      </vue-html2pdf>
+      <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h3>Storage</h3><br>
+                <ul v-for="(date, idx) of sortUniqueDate" :key="idx" >
+                  <h5>{{ date.substring(0, 4) }}.{{ date.substring(4, 6) }}.{{ date.substring(6, 8) }}.</h5>
+                    <li v-for="item in orderItems" v-bind:key="item.name" v-if="date==item.date">
+                      <div @click="showReview(item.name)"><i class="mdi mdi-file-pdf-box"></i> {{ item.name }}</div>
+                    </li>
+                    <br>
+                </ul>
             </div>
           </div>
         </div>
-        <div class='col grid-margin stretch-card'>
-          <div class='card' style="border: solid 1px rgb(223, 223, 223); box-shadow: none;">
-            <div class='card-body'>
-              <h4 class='card-title mb-0' id='script'>Script</h4><br/>
-              <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
-              <div class='col' style='padding-left:0px; padding-right:0px;'>
-                <textarea id="script" class='scroll type1' rows='7' style='width:100%; border:none;'>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</textarea>
-              </div>
-              <h4 class='card-title mb-0' id='script'>Summary</h4><br/>
-              <div class='col' style='padding-left:0px; padding-right:0px;'>
-                <textarea id="script" class='scroll type1' rows='5' style='width:100%; border:none;'>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</textarea>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-      <div style="text-align: center;">
-        <b-button class="btn-fw btn-inverse-link" @click="clicktest"><i class="mdi mdi-file-pdf-box"></i>Save</b-button>
-        <b-button class="btn-fw btn-inverse-link" @click="closeReview"><i class="mdi mdi-window-close"></i>Exit</b-button>
-      </div>
-    </div> <!-- 까지 열람 팝업 -->
-    <div class="row">
-      <div class="col-md-12 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <h3>Storage</h3><br>
-              <ul v-for="(date, idx) of sortUniqueDate" :key="idx" >
-                <h5>{{ date.substring(0, 4) }}.{{ date.substring(4, 6) }}.{{ date.substring(6, 8) }}.</h5>
-                  <li v-for="item in orderItems" v-bind:key="item.name" v-if="date==item.date">
-                    <div @click="showReview(item.name)"><i class="mdi mdi-file-pdf-box"></i> {{ item.name }}</div>
-                  </li>
-                  <br>
-              </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 </template>
 
 <script lang="js">
+// import html2pdf from 'html2pdf.js'
+import VueHtml2pdf from 'vue-html2pdf'
+
 export default {
   name: 'myPdfFiles',
+  components: {
+    VueHtml2pdf
+  },
   data () {
     return {
       timeline: [
@@ -87,7 +113,8 @@ export default {
         { name: '2021-09-20-19-20.pdf', date: '20210920' },
         { name: '2021-09-18-17-55.pdf', date: '20210918' },
         { name: '2021-09-20-11-30.pdf', date: '20210920' }
-      ]
+      ],
+      propTitle: 'mypdf'
     }
   },
   computed: {
@@ -111,6 +138,22 @@ export default {
     closeReview () {
       const pop = document.getElementById('popPosition')
       pop.style.display = 'none'
+    },
+    // exportToPDF () {
+    //   // window.scrollTo(0, 0);
+    //   html2pdf(this.$refs.pdfarea, {
+    //     margin: 0,
+    //     filename: 'document.pdf',
+    //     image: {type: 'jpg', quality: 0.95},
+    //     // allowTaint 옵션추가
+    //     html2canvas: {
+    //       useCORS: true, scrollY: 0, scale: 1, dpi: 300, letterRendering: true, allowTaint: false
+    //     },
+    //     jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4', compressPDF: true }
+    //   })
+    // }
+    async exportToPDF () {
+      this.$refs.html2Pdf.generatePdf()
     }
   }
 }
