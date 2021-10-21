@@ -119,7 +119,7 @@ export default {
         success: function (data) {
           // this.timeline.push({imgURL: 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAABWoAAAM...', id: 'temp'})
           this.timeline.push({imgURL: data[0].imgURL, id: data[0].id})
-        }
+        }.bind(this)
       }).catch(error => {
         console.log(error.message)
       })
