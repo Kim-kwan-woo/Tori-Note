@@ -5,10 +5,12 @@
       <h3>{{ lecture_name }} {{ date }}</h3>
       <div class="row">
         <div class="col-md grid-margin">
-          <div class="card" v-for="item in orderItems" v-bind:key="item.start" style="margin-bottom:25px;">
+          <div class="card" v-for="(item, index) in orderItems" v-bind:key="item.start" style="margin-bottom:25px;">
             <div class="card-body">
-              <div style="float:left; width:35%; margin-right:10px;">
+              <div style="float:left; width:35%; margin-right:10px; text-align:center">
                 <img width='100%' height='100%' v-bind:src='item.imgURL'>
+                <div v-bind:id='index + 1000' @click="playAudio(index)" style='position:absolute; bottom:53px; left:47px; z-index:1; display:block'>▶</div>
+                <audio v-bind:id='index' controls="controls" src="[blobURL]" type="audio/mp3" style="width: 100%; margin-top:20px;" />
               </div>
               <div>
                 <h4 class='card-title mb-0' id='script'>Script</h4><br/>
@@ -24,6 +26,7 @@
 
 <script lang="js">
 import html2pdf from 'html2pdf.js'
+import S3config from '../Key.js'
 import JQuery from 'jquery'
 
 let $ = JQuery
@@ -97,6 +100,34 @@ export default {
           useCORS: true, scrollY: 0, scale: 1, dpi: 300, letterRendering: true, allowTaint: false
         },
         jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4', compressPDF: true }
+      })
+    },
+    playAudio (index) {
+      document.getElementById(index + 1000).style.display = 'none'
+      const AWS = require('aws-sdk')
+      const S3 = new AWS.S3({
+        endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
+        region: 'kr-standard',
+        credentials: {
+          accessKeyId: S3config.accessKeyId,
+          secretAccessKey: S3config.secretAccessKey
+        }
+      })
+      const params = {
+        Bucket: S3config.Bucket,
+        Key: 'audio_0.mp3'
+      }
+
+      S3.getObject(params, (err, data) => {
+        if (err) {
+          console.log(err, err.stack)
+        } else {
+          let mp3Blob = new Blob([data.Body], {
+            type: 'audio/mp3'
+          })
+          document.getElementById(index).src = window.URL.createObjectURL(mp3Blob)
+          document.getElementById(index).play()
+        }
       })
     }
   }
