@@ -14,7 +14,7 @@
               <div v-for="(item, index) of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
                 <div class='card-body' style='padding:0px;'>
                   <div class='row'>
-                  <img width='100%' height='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" @click="imgClicked(index)">
+                  <img width='100%' height='100%' v-bind:src='item.imgURL' @click="imgClicked(index)">
                   </div>
                 </div>
               </div>
@@ -55,18 +55,13 @@ import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
 
 let $ = JQuery
+
 export default {
   name: 'dashboard',
   data () {
     return {
       timeline: [
-        {key_word: '시작', time: '00:00 - 12:00', summary: '지금부터 수업 시작하겠습니다.'},
-        {key_word: '자료 구조', time: '12:00 - 15:00', summary: '오늘은 지난주에 이어 자료구조를 하겠습니다.'},
-        {key_word: '스택', time: '15:00 - 22:00', summary: '스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행됩니다.'},
-        {key_word: '마무리', time: '22:00 - 35:00', summary: '오늘 수업은 여기서 마무리하겠습니다.'},
-        {key_word: '스택', time: '15:00 - 22:00', summary: '스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행됩니다.'},
-        {key_word: '마무리', time: '22:00 - 35:00', summary: '오늘 수업은 여기서 마무리하겠습니다.'},
-        {key_word: '과제', time: '35:00 - 52:20', summary: '다음주까지 나만의 노트 정리하기 과제입니다.'}
+        {imgURL: 'https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg', id: 'temp'}
       ],
       StopPer10: false, // true면 녹화 중지
       Record: false, // true면 녹화 시작
@@ -112,8 +107,22 @@ export default {
         setTimeout(() => resolve(), ms)
       })
     },
+    RequestImg () {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/timeline/images',
+        dataType: 'json',
+        success: function (data) {
+          // this.timeline.push({imgURL: 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAABWoAAAM...', id: 'temp'})
+          this.timeline.push({imgURL: data.imgURL, id: data.id})
+        }
+      }).catch(error => {
+        console.log(error.message)
+      })
+    },
     imgClicked (index) {
       this.imgIndex = index
+      console.log(index)
       $.ajax({
         type: 'GET',
         url: 'http://localhost:3000/script/slide',
@@ -264,13 +273,6 @@ export default {
         }.bind(this)
       })
     },
-    CaptureScreen () {
-      /*
-      const testimg = document.getElementById('123')
-      const testdata = [{'imgURL': 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAABWoAAAM...'}]
-      testimg.src = testdata[0].imgURL
-      */
-    },
     async OddrecordPer10s () {
       this.BtnRecordClicked()
       await this.setTimeoutPromise(59000)
@@ -282,18 +284,6 @@ export default {
       await this.setTimeoutPromise(59000)
       await this.BtnStopClicked_Even()
       this.RequestImg()
-    },
-    RequestImg () {
-      $.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/timeline/images',
-        dataType: 'json',
-        success: function (data) {
-          console.log(data)
-        }
-      }).catch(error => {
-        console.log(error.message)
-      })
     },
     async AllrecordPer10s () {
       const pop = document.getElementById('popPosition')
