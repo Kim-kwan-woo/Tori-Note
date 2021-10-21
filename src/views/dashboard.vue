@@ -6,6 +6,7 @@
         <textarea id="title" rows='1' style='width:98%; margin-bottom:15px' placeholder="Input your Note Title..."></textarea><br/>
         <b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"><i class="mdi mdi-note-plus"></i>Create</b-button>
       </div>
+      <b-button class="btn-fw btn-inverse-light" @click="test" style="display:none">test</b-button>
       <div style='position:relative; top:3px; left:3px; padding:2px;'><img v-on:click="Time_Line=!Time_Line" id="toggle" width='18px' height='18px' src="../assets/images/arrow_r.png"></div>
       <div v-show="Time_Line" class='col-md-1 grid-margin stretch-card timelineDiv' id='timeline'>
         <div class='card'>
@@ -14,7 +15,7 @@
               <div v-for="(item, index) of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
                 <div class='card-body' style='padding:0px;'>
                   <div class='row'>
-                  <img width='100%' height='100%' v-bind:src='item.imgURL' @click="imgClicked(index)">
+                  <img width='100%' height='100%' v-bind:src='item.imgURL' @click="imgClicked(item.imgURL, index)">
                   </div>
                 </div>
               </div>
@@ -40,7 +41,7 @@
             <h4 class='card-title mb-0' id='script'>Script</h4><br/>
             <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
             <div class='col' style='padding-left:0px; padding-right:0px;'>
-              <img width='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" style='margin-right:2%;'>
+              <img id="scriptIMG" width='100%' src="https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg" style='margin-right:2%;'>
               <textarea id="script" class='scroll type1' rows='5' style='width:100%; border:none;'>안녕하세요 학생여러분 오늘은 자료구조 중 스택에 대해 학습해 보겠습니다.스택은 모든 원소들의 삽입과 삭제가 리스트의 한쪽 끝에서만 수행되는 제한 조건을 가지는 선형 자료 구조입니다.</textarea>
             </div>
           </div>
@@ -107,6 +108,9 @@ export default {
         setTimeout(() => resolve(), ms)
       })
     },
+    // test () {
+    // this.timeline.push({imgURL: 'https://img.insight.co.kr/static/2016/02/15/700/yy1275us791rlld79jxb.jpg', id: 'temp'})
+    // },
     RequestImg () {
       $.ajax({
         type: 'GET',
@@ -114,13 +118,16 @@ export default {
         dataType: 'json',
         success: function (data) {
           // this.timeline.push({imgURL: 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAABWoAAAM...', id: 'temp'})
-          this.timeline.push({imgURL: data.imgURL, id: data.id})
+          this.timeline.push({imgURL: data[0].imgURL, id: data[0].id})
         }
       }).catch(error => {
         console.log(error.message)
       })
     },
-    imgClicked (index) {
+    imgClicked (imgURL, index) {
+      const scriptIMG = document.getElementById('scriptIMG')
+      scriptIMG.src = imgURL
+
       this.imgIndex = index
       console.log(index)
       $.ajax({
