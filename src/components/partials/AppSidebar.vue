@@ -25,22 +25,19 @@
               <li class="nav-item">
                 <router-link class="nav-link" to="/">Live Lecture</router-link>
               </li>
-              <li class="nav-item">
-                <router-link class="nav-link" to="/Review/">Review Space</router-link>
-              </li>
             </ul>
           </b-collapse>
         </li>
         <li class="nav-item">
           <a class="nav-link" v-b-toggle="'storage-dropdown'">
             <i class="menu-icon mdi mdi-arrow-down-bold-circle"></i>
-            <span class="menu-title">Storage</span>
+            <span class="menu-title">Review</span>
             <i class="menu-arrow"></i>
           </a>
           <b-collapse id="storage-dropdown">
             <ul class="nav flex-column sub-menu">
               <li class="nav-item">
-                <router-link class="nav-link" to="/MyPdfFiles/">My PDF Files</router-link>
+                <router-link class="nav-link" to="/MyStorage/">My Storage</router-link>
               </li>
             </ul>
           </b-collapse>

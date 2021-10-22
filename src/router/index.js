@@ -5,7 +5,8 @@ import Router from 'vue-router'
 import dashboard from '../views/dashboard'
 
 // Storage Components
-import MyPdfFiles from '../views/storage/MyPdfFiles'
+import MyStorage from '../views/storage/MyStorage'
+import Review from '../views/storage/Review'
 
 //  Widgets Components
 import mainView from '../mainView'
@@ -30,9 +31,15 @@ export default new Router({
         component: dashboard
       },
       {
-        path: '/MyPdfFiles',
-        name: 'MyPdfFiles',
-        component: MyPdfFiles
+        path: '/MyStorage',
+        name: 'MyStorage',
+        component: MyStorage
+      },
+      {
+        path: '/Review',
+        name: 'Review',
+        component: Review,
+        props: true
       }
     ]
   },
