@@ -7,14 +7,29 @@
         <div class="col-md grid-margin">
           <div class="card" v-for="(item, index) in orderItems" v-bind:key="item.start" style="margin-bottom:25px;">
             <div class="card-body">
-              <div style="float:left; width:35%; margin-right:10px; text-align:center">
-                <img width='100%' height='100%' v-bind:src='item.imgURL'>
-                <div v-bind:id='index + 1000' @click="playAudio(index)" style='position:absolute; bottom:53px; left:47px; z-index:1; display:block'>▶</div>
-                <audio v-bind:id='index' controls="controls" src="[blobURL]" type="audio/mp3" style="width: 100%; margin-top:20px;" />
+              <div class="col-md-12 grid-margin" style="height:340px;">
+                <div class="col-md-4" style="float:left; margin-right:10px;">
+                  <img width='100%' height='100%' v-bind:src='item.imgURL'>
+                  <audio v-bind:id='index' controls="controls" src="[blobURL]" type="audio/mp3" style="width: 100%; margin-top:20px;" />
+                  <div v-bind:id='index + 1000' @click="playAudio(index, item.id, item.start, item.end)" style='position:absolute; bottom:22px; left:31px; z-index:1; display:block'>▶</div>
+                </div>
+                <div class="col-md">
+                  <div style='position:absolute; top:0px; right:10px;'><b-button class="btn-fw btn-inverse-light"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+                  <h4 class='card-title mb-0' id="Pscript">Summary</h4><br/>
+                  <div id="summary" class="editable scroll type1" contenteditable="true" style='height:280px; width:66%; border:none;'>
+                    <ol>
+                      <li>{{item.summary[0]}}</li>
+                      <li>{{item.summary[1]}}</li>
+                      <li>{{item.summary[2]}}</li>
+                    </ol>
+                  </div>
+                </div>
               </div>
-              <div>
-                <h4 class='card-title mb-0' id='script'>Script</h4><br/>
-                {{ item.script }}
+              <div class="col-md">
+                <div style='position:absolute; top:0px; right:10px;'><b-button class="btn-fw btn-inverse-light"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+                <h4 class='card-title mb-0' id="Pscript">Script</h4><br/>
+                <textarea v-model="item.script" id="script" class='scroll type1' style='height:180px; width:100%; border:none;'>
+                </textarea>
               </div>
             </div>
           </div>
@@ -38,17 +53,19 @@ export default {
       items: [
         {
           imgURL: 'https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg',
-          id: 'choi_',
-          start: 1,
-          end: '3',
-          script: '발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근'
+          id: 'audio_',
+          start: 0,
+          end: '2',
+          script: '발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근',
+          summary: [ 'sentence1', 'sentence2', 'sentence3' ]
         },
         {
-          imgURL: 'https://img.insight.co.kr/static/2016/02/15/700/yy1275us791rlld79jxb.jpg',
-          id: 'choi_',
-          start: 4,
-          end: '4',
-          script: '그면 사 지적 비라는 게 있습니다 이거는 부여해서'
+          imgURL: 'https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg',
+          id: 'audio_',
+          start: 3,
+          end: '3',
+          script: '발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근',
+          summary: [ 'sentence1', 'sentence2', 'sentence3' ]
         }
       ],
       request: false // storage 한번만 요청
@@ -88,21 +105,34 @@ export default {
         console.log(error.message)
       })
     },
-    exportToPDF () {
-      // window.scrollTo(0, 0);
-      console.log('dd')
+    setTimeoutPromise (ms) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(), ms)
+      })
+    },
+    async exportToPDF () {
+      const textarea = document.getElementsByTagName('textarea')
+      for (let i = 0; i < textarea.length; i++) {
+        textarea[i].style.height = '1px'
+        textarea[i].style.height = (2 * textarea[i].scrollHeight) + 'px' // textarea 높이 조절 (스크롤 없도록)
+      }
+
       html2pdf(this.$refs.pdfarea, {
         margin: 0,
         filename: 'document.pdf',
         image: {type: 'jpg', quality: 0.95},
-        // allowTaint 옵션추가
         html2canvas: {
           useCORS: true, scrollY: 0, scale: 1, dpi: 300, letterRendering: true, allowTaint: false
         },
         jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4', compressPDF: true }
       })
+
+      await this.setTimeoutPromise(5000)
+      for (let i = 0; i < textarea.length; i++) {
+        textarea[i].style.height = '180px'
+      }
     },
-    playAudio (index) {
+    playAudio (index, id, start, end) {
       document.getElementById(index + 1000).style.display = 'none'
       const AWS = require('aws-sdk')
       const S3 = new AWS.S3({
@@ -115,9 +145,8 @@ export default {
       })
       const params = {
         Bucket: S3config.Bucket,
-        Key: 'audio_0.mp3'
+        Key: id + start + '.mp3'
       }
-
       S3.getObject(params, (err, data) => {
         if (err) {
           console.log(err, err.stack)
@@ -135,4 +164,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.scroll{ overflow-y: scroll; }
+.type1::-webkit-scrollbar{ width: 6px; }
+.type1::-webkit-scrollbar-thumb{ height: 7%; background-color: rgb(223, 223, 223); border-radius: 15px; }
+.type1::-webkit-scrollbar-track{ background-color: white; }
+
+textarea { resize: none; }
 </style>
