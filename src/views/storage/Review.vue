@@ -14,27 +14,27 @@
                   <div v-bind:id='index + 1000' @click="playAudio(index, item.id, item.start, item.end)" style='position:absolute; bottom:22px; left:31px; z-index:1; display:block'>▶</div>
                 </div>
                 <div class="col-md grid-margin" style="float:right; height:350px; width:65%;">
-                  <div style='position:absolute; top:0px; right:10px;'><b-button class="btn-fw btn-inverse-light"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+                  <div style='position:absolute; top:0px; right:10px;'><b-button class="btn-fw btn-inverse-light" @click="editSummary(index)"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
                   <h4 class='card-title mb-0' id="Pscript">Summary</h4><br/>
                   <div id="summary" class="editable scroll type1" contenteditable="true" style='height:280px; width:100%; border:none;'>
-                    <div class="bounce" v-if="item.summary[0] === 'sentence1'" style="text-align:center;">
+                    <div class="bounce" v-if="item.summary[0] === 'sentence11'" style="text-align:center;">
                       <img width='50%' height='100%' src='../../assets/images/kwantori.gif'>
                       <br/>요약을 생성 중이에요!
                     </div>
                     <div v-else> <!-- 요약이 있는 경우 -->
                       <ol>
-                        <li>{{item.summary[0]}}</li>
-                        <li>{{item.summary[1]}}</li>
-                        <li>{{item.summary[2]}}</li>
+                        <li><div name='summary'>{{item.summary[0]}}</div></li>
+                        <li><div name='summary'>{{item.summary[1]}}</div></li>
+                        <li><div name='summary'>{{item.summary[2]}}</div></li>
                       </ol>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="col-md">
-                <div style='position:absolute; top:0px; right:10px;'><b-button class="btn-fw btn-inverse-light"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+                <div style='position:absolute; top:0px; right:10px;'><b-button class="btn-fw btn-inverse-light" @click="editScript(index)"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
                 <h4 class='card-title mb-0' id="Pscript">Script</h4><br/>
-                <textarea v-model="item.script" id="script" class='scroll type1' style='height:180px; width:100%; border:none;'>
+                <textarea v-model="item.script" id="script" name="script" class='scroll type1' style='height:180px; width:100%; border:none;'>
                 </textarea>
               </div>
             </div>
@@ -179,6 +179,18 @@ export default {
       this.mp3Arr = null
       document.getElementById(index).src = window.URL.createObjectURL(mp3Blob)
       document.getElementById(index).play()
+    },
+    editSummary (index) {
+      const summary0 = document.getElementsByName('summary')[index * 3].innerText
+      const summary1 = document.getElementsByName('summary')[index * 3 + 1].innerText
+      const summary2 = document.getElementsByName('summary')[index * 3 + 2].innerText
+      this.items[index].summary[0] = summary0
+      this.items[index].summary[1] = summary1
+      this.items[index].summary[2] = summary2
+    },
+    editScript (index) {
+      const edit = document.getElementsByName('script')[index].value
+      this.items[index].script = edit
     }
   }
 }
