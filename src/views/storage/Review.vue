@@ -5,14 +5,16 @@
       <h3>{{ lecture_name }} {{ date }}</h3>
       <div class="row">
         <div class="col-md grid-margin">
-          <div class="card" v-for="item in orderItems" v-bind:key="item.start" style="margin-bottom:25px;">
+          <div class="card" v-for="(item, index) in orderItems" v-bind:key="item.start" style="margin-bottom:25px;">
             <div class="card-body">
-              <div style="float:left; width:35%; margin-right:10px;">
+              <div style="float:left; width:35%; margin-right:10px; text-align:center">
                 <img width='100%' height='100%' v-bind:src='item.imgURL'>
+                <div v-bind:id='index + 1000' @click="playAudio(index, item.id, item.start, item.end)" style='position:absolute; bottom:53px; left:47px; z-index:1; display:block'>▶</div>
+                <audio v-bind:id='index' controls="controls" src="[blobURL]" type="audio/mp3" style="width: 100%; margin-top:20px;" />
+                <h4 class='card-title mb-0' id='script'>Script</h4><br/>
+                <textarea v-model='item.script' id="script" class='scroll type1' rows='5' style='height:100%; width:100%; border:none;'></textarea>
               </div>
               <div>
-                <h4 class='card-title mb-0' id='script'>Script</h4><br/>
-                {{ item.script }}
               </div>
             </div>
           </div>
@@ -24,8 +26,8 @@
 
 <script lang="js">
 import html2pdf from 'html2pdf.js'
-import JQuery from 'jquery'
 import S3config from '../Key.js'
+import JQuery from 'jquery'
 
 let $ = JQuery
 
@@ -36,21 +38,21 @@ export default {
       items: [
         {
           imgURL: 'https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg',
-          id: 'choi_',
-          start: 1,
-          end: '3',
-          script: '발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근'
+          id: 'audio',
+          start: 0,
+          end: '1',
+          script: '발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근?'
         },
         {
           imgURL: 'https://img.insight.co.kr/static/2016/02/15/700/yy1275us791rlld79jxb.jpg',
-          id: 'choi_',
-          start: 4,
-          end: '4',
+          id: 'audio',
+          start: 2,
+          end: '3',
           script: '그면 사 지적 비라는 게 있습니다 이거는 부여해서'
         }
       ],
       request: false, // storage 한번만 요청
-      sound: null
+      mp3Arr: null
     }
   },
   props: {
@@ -91,7 +93,8 @@ export default {
     },
     exportToPDF () {
       // window.scrollTo(0, 0);
-      console.log('dd')
+      var height = document.getElementById('script').scrollHeight
+      document.getElementById('script').rows = height // document.getElementById('script').scrollHeight
       html2pdf(this.$refs.pdfarea, {
         margin: 0,
         filename: 'document.pdf',
@@ -103,7 +106,23 @@ export default {
         jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4', compressPDF: true }
       })
     },
-    onAudioSelected (e) {
+    loadAudio (S3, params) {
+      return new Promise((resolve, reject) => {
+        S3.getObject(params, (err, data) => {
+          if (err) {
+            console.log(err, err.stack)
+          } else if (this.mp3Arr === null) {
+            this.mp3Arr = data.Body
+            resolve()
+          } else {
+            this.mp3Arr = new Uint8Array([...this.mp3Arr, ...data.Body])
+            resolve()
+          }
+        })
+      })
+    },
+    async playAudio (index, id, start, end) {
+      document.getElementById(index + 1000).style.display = 'none'
       const AWS = require('aws-sdk')
       const S3 = new AWS.S3({
         endpoint: new AWS.Endpoint('https://kr.object.ncloudstorage.com'),
@@ -113,26 +132,35 @@ export default {
           secretAccessKey: S3config.secretAccessKey
         }
       })
-      const params = {
-        Bucket: S3config.Bucket,
-        Key: 'audio_0.mp3'
-      }
 
-      S3.getObject(params, (err, data) => {
-        if (err) {
-          console.log(err, err.stack)
-        } else {
-          let mp3Blob = new Blob([data.Body], {
-            type: 'audio/mp3'
-          })
-          this.$refs.source.src = window.URL.createObjectURL(mp3Blob)
-          this.$refs.player.load()
+      for (var i = Number(start); i <= Number(end); i++) {
+        console.log(i)
+        const params = {
+          Bucket: S3config.Bucket,
+          Key: String(id) + '_' + String(i) + '.mp3'
         }
-      })
+        await this.loadAudio(S3, params)
+      }
+      let mp3Blob = new Blob([this.mp3Arr], {type: 'audio/mp3'})
+      this.mp3Arr = null
+      document.getElementById(index).src = window.URL.createObjectURL(mp3Blob)
+      document.getElementById(index).play()
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
+.scroll{ overflow-y: scroll; }
+.type1::-webkit-scrollbar{ width: 6px; }
+.type1::-webkit-scrollbar-thumb{ height: 7%; background-color: rgb(223, 223, 223); border-radius: 15px; }
+.type1::-webkit-scrollbar-track{ background-color: white; }
+
+.left {
+  display: flex;
+  flex-direction: column;
+}
+.left > textarea {
+  flex: 1;
+}
 </style>
