@@ -74,12 +74,15 @@ export default {
           summary: [ 'sentence1', 'sentence2', 'sentence3' ]
         }
       ],
-      request: false // storage 한번만 요청
+      request: false, // storage 한번만 요청
+      mp3Arr: null
     }
   },
   props: {
     lecture_name: { type: String, default: '' },
     date: { type: String, default: '' }
+  },
+  created () {
   },
   computed: {
     orderItems: function () {
@@ -122,7 +125,6 @@ export default {
         textarea[i].style.height = '1px'
         textarea[i].style.height = (2 * textarea[i].scrollHeight) + 'px' // textarea 높이 조절 (스크롤 없도록)
       }
-
       html2pdf(this.$refs.pdfarea, {
         margin: 0,
         filename: 'document.pdf',
@@ -138,7 +140,22 @@ export default {
         textarea[i].style.height = '180px'
       }
     },
-    playAudio (index, id, start, end) {
+    loadAudio (S3, params) {
+      return new Promise((resolve, reject) => {
+        S3.getObject(params, (err, data) => {
+          if (err) {
+            console.log(err, err.stack)
+          } else if (this.mp3Arr === null) {
+            this.mp3Arr = data.Body
+            resolve()
+          } else {
+            this.mp3Arr = new Uint8Array([...this.mp3Arr, ...data.Body])
+            resolve()
+          }
+        })
+      })
+    },
+    async playAudio (index, id, start, end) {
       document.getElementById(index + 1000).style.display = 'none'
       const AWS = require('aws-sdk')
       const S3 = new AWS.S3({
@@ -149,21 +166,19 @@ export default {
           secretAccessKey: S3config.secretAccessKey
         }
       })
-      const params = {
-        Bucket: S3config.Bucket,
-        Key: id + start + '.mp3'
-      }
-      S3.getObject(params, (err, data) => {
-        if (err) {
-          console.log(err, err.stack)
-        } else {
-          let mp3Blob = new Blob([data.Body], {
-            type: 'audio/mp3'
-          })
-          document.getElementById(index).src = window.URL.createObjectURL(mp3Blob)
-          document.getElementById(index).play()
+
+      for (var i = Number(start); i <= Number(end); i++) {
+        console.log(i)
+        const params = {
+          Bucket: S3config.Bucket,
+          Key: String(id) + '_' + String(i) + '.mp3'
         }
-      })
+        await this.loadAudio(S3, params)
+      }
+      let mp3Blob = new Blob([this.mp3Arr], {type: 'audio/mp3'})
+      this.mp3Arr = null
+      document.getElementById(index).src = window.URL.createObjectURL(mp3Blob)
+      document.getElementById(index).play()
     }
   }
 }

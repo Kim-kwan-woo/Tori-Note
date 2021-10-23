@@ -161,7 +161,10 @@ export default {
           'start': this.imgIndex,
           'content': editScript
         },
-        dataType: 'json'
+        dataType: 'json',
+        success: function (result) {
+          alert('result=' + result['summary'])
+        }
       }).catch(error => {
         console.log(error.message)
       })
