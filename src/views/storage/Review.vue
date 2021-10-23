@@ -17,11 +17,17 @@
                   <div style='position:absolute; top:0px; right:10px;'><b-button class="btn-fw btn-inverse-light"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
                   <h4 class='card-title mb-0' id="Pscript">Summary</h4><br/>
                   <div id="summary" class="editable scroll type1" contenteditable="true" style='height:280px; width:66%; border:none;'>
-                    <ol>
-                      <li>{{item.summary[0]}}</li>
-                      <li>{{item.summary[1]}}</li>
-                      <li>{{item.summary[2]}}</li>
-                    </ol>
+                    <div class="bounce" v-if="item.summary[0] === 'sentence1'" style="text-align:center;">
+                      <img width='50%' height='100%' src='../../assets/images/kwantori.gif'>
+                      <br/>요약을 생성 중이에요!
+                    </div>
+                    <div v-else> <!-- 요약이 있는 경우 -->
+                      <ol>
+                        <li>{{item.summary[0]}}</li>
+                        <li>{{item.summary[1]}}</li>
+                        <li>{{item.summary[2]}}</li>
+                      </ol>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -170,4 +176,15 @@ export default {
 .type1::-webkit-scrollbar-track{ background-color: white; }
 
 textarea { resize: none; }
+
+.bounce {
+  animation: bounce_frames 0.5s;
+  animation-direction: alternate;
+  animation-timing-function: cubic-bezier(.5, 0.05, 1, .5);
+  animation-iteration-count: 1000;
+}
+@keyframes bounce_frames {
+  from {transform: translate3d(0, 0, 0);}
+  to {transform: translate3d(0, 50px, 0);}
+}
 </style>
