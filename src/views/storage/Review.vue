@@ -7,16 +7,16 @@
         <div class="col-md grid-margin">
           <div class="card" v-for="(item, index) in orderItems" v-bind:key="item.start" style="margin-bottom:25px;">
             <div class="card-body">
-              <div class="col-md-12 grid-margin" style="height:340px;">
-                <div class="col-md-4" style="float:left; margin-right:10px;">
+              <div class="col grid-margin" style="height:340px;">
+                <div class="col-md-4 grid-margin" style="float:left; margin-right:5px;">
                   <img width='100%' height='100%' v-bind:src='item.imgURL'>
-                  <audio v-bind:id='index' controls="controls" src="[blobURL]" type="audio/mp3" style="width: 100%; margin-top:20px;" />
+                  <audio v-bind:id='index' controls="controls" src="[blobURL]" type="audio/mp3" style='width: 100%; margin-top:20px;' />
                   <div v-bind:id='index + 1000' @click="playAudio(index, item.id, item.start, item.end)" style='position:absolute; bottom:22px; left:31px; z-index:1; display:block'>▶</div>
                 </div>
-                <div class="col-md">
+                <div class="col-md grid-margin" style="float:right; height:350px; width:65%;">
                   <div style='position:absolute; top:0px; right:10px;'><b-button class="btn-fw btn-inverse-light"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
                   <h4 class='card-title mb-0' id="Pscript">Summary</h4><br/>
-                  <div id="summary" class="editable scroll type1" contenteditable="true" style='height:280px; width:66%; border:none;'>
+                  <div id="summary" class="editable scroll type1" contenteditable="true" style='height:280px; width:100%; border:none;'>
                     <div class="bounce" v-if="item.summary[0] === 'sentence1'" style="text-align:center;">
                       <img width='50%' height='100%' src='../../assets/images/kwantori.gif'>
                       <br/>요약을 생성 중이에요!
@@ -171,7 +171,7 @@ export default {
         console.log(i)
         const params = {
           Bucket: S3config.Bucket,
-          Key: String(id) + '_' + String(i) + '.mp3'
+          Key: String(id) + String(i) + '.mp3'
         }
         await this.loadAudio(S3, params)
       }
