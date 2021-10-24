@@ -4,38 +4,42 @@
     <div ref="pdfarea">
       <h3>{{ lecture_name }} {{ date }}</h3>
       <div class="row">
-        <div class="col-md grid-margin">
+        <div class="col-md-12 grid-margin">
           <div class="card" v-for="(item, index) in orderItems" v-bind:key="item.start" style="margin-bottom:25px;">
             <div class="card-body">
-              <div class="col grid-margin" style="height:340px;">
-                <div class="col-md-4 grid-margin" style="float:left; margin-right:5px;">
-                  <img width='100%' height='100%' v-bind:src='item.imgURL'>
-                  <audio v-bind:id='index' controls="controls" src="[blobURL]" type="audio/mp3" style='width: 100%; margin-top:20px;' />
-                  <div v-bind:id='index + 1000' @click="playAudio(index, item.id, item.start, item.end)" style='position:absolute; bottom:22px; left:31px; z-index:1; display:block'>▶</div>
-                </div>
-                <div class="col-md grid-margin" style="float:right; height:350px; width:65%;">
-                  <div style='position:absolute; top:0px; right:10px;'><b-button class="btn-fw btn-inverse-light" @click="editSummary(index)"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
-                  <h4 class='card-title mb-0' id="Pscript">Summary</h4><br/>
-                  <div id="summary" class="editable scroll type1" contenteditable="true" style='height:280px; width:100%; border:none;'>
-                    <div class="bounce" v-if="item.summary[0] === 'sentence11'" style="text-align:center;">
-                      <img width='50%' height='100%' src='../../assets/images/kwantori.gif'>
-                      <br/>요약을 생성 중이에요!
+              <div class="row">
+                <div class="col-md-12 grid-margin">
+                  <div calss="col">
+                    <div class="col-md-4" style="float:left;">
+                      <img width='100%' height='100%' v-bind:src='item.imgURL'>
+                      <audio v-bind:id='index' controls="controls" src="[blobURL]" type="audio/mp3" style='width: 100%; margin-top:20px;' />
+                      <div v-bind:id='index + 1000' @click="playAudio(index, item.id, item.start, item.end)" style='position:absolute; bottom:22px; left:31px; z-index:1; display:block'>▶</div>
                     </div>
-                    <div v-else> <!-- 요약이 있는 경우 -->
-                      <ol>
-                        <li><div name='summary'>{{item.summary[0]}}</div></li>
-                        <li><div name='summary'>{{item.summary[1]}}</div></li>
-                        <li><div name='summary'>{{item.summary[2]}}</div></li>
-                      </ol>
+                    <div class="col-md-8" style="float:right;">
+                      <div style='position:absolute; top:0px; right:10px;'><b-button class="btn-fw btn-inverse-light" @click="editSummary(index)"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+                      <h4 class='card-title mb-0' id="Pscript">Summary</h4><br/>
+                      <div id="summary" class="editable scroll type1" contenteditable="true" style='width:100%; border:none;'>
+                        <div class="bounce" v-if="item.summary[0] === 'NO SUMMARY'" style="text-align:center;">
+                          <img width='50%' height='100%' src='../../assets/images/kwantori.gif'>
+                          <br/>요약을 생성 중이에요!
+                        </div>
+                        <div v-else> <!-- 요약이 있는 경우 -->
+                          <ol>
+                            <li><div name='summary'>{{item.summary[0]}}</div></li>
+                            <li><div name='summary'>{{item.summary[1]}}</div></li>
+                            <li><div name='summary'>{{item.summary[2]}}</div></li>
+                          </ol>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-md">
-                <div style='position:absolute; top:0px; right:10px;'><b-button class="btn-fw btn-inverse-light" @click="editScript(index)"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
-                <h4 class='card-title mb-0' id="Pscript">Script</h4><br/>
-                <textarea v-model="item.script" id="script" name="script" class='scroll type1' style='height:180px; width:100%; border:none;'>
-                </textarea>
+                <div class="col-md-12">
+                  <div style='position:absolute; top:0px; right:10px;'><b-button class="btn-fw btn-inverse-light" @click="editScript(index)"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+                  <h4 class='card-title mb-0' id="Pscript">Script</h4><br/>
+                  <textarea v-model="item.script" id="script" name="script" class='scroll type1' style='height:180px; width:100%; border:none;'>
+                  </textarea>
+                </div>
               </div>
             </div>
           </div>
