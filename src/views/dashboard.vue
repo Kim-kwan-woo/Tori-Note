@@ -52,7 +52,6 @@
 </template>
 
 <script lang="js">
-import pieChart from '../components/charts/examples/pieChart'
 import JQuery from 'jquery'
 
 let $ = JQuery
@@ -78,9 +77,6 @@ export default {
       curDate: {}, // 사용자가 강의 제목 입력했을 때의 시간
       imgIndex: {} // 사용자가 조회, 수정하고자 하는 스크립트의 슬라이드 번호
     }
-  },
-  components: {
-    pieChart
   },
   methods: {
     toggleProBanner: function () {
@@ -161,10 +157,7 @@ export default {
           'start': this.imgIndex,
           'content': editScript
         },
-        dataType: 'json',
-        success: function (result) {
-          alert('result=' + result['summary'])
-        }
+        dataType: 'json'
       }).catch(error => {
         console.log(error.message)
       })
