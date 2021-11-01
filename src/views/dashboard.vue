@@ -2,7 +2,7 @@
   <section class='Study'>
     <div class='row'>
       <div id="popPosition" class="popPosition card">
-        <p>Tori Note가 여러분의 강의력을 높여줄게요!</p>
+        <p>Tori Note가 여러분의 학습력을 높여줄게요!</p>
         <textarea id="title" rows='1' style='width:98%; margin-bottom:15px' placeholder="Input your Note Title..."></textarea><br/>
         <b-button class="btn-fw btn-inverse-light" @click="AllrecordPer10s"><i class="mdi mdi-note-plus"></i>Create</b-button>
       </div>
