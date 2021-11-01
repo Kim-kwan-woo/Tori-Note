@@ -28,10 +28,6 @@ export default {
   data () {
     return {
       items: [
-        { lecture_name: '프로그래밍언어개념', date: '20210920' },
-        { lecture_name: '운영체제', date: '20210920' },
-        { lecture_name: '컴퓨터네트워크', date: '20210918' },
-        { lecture_name: '컴퓨터네트워크', date: '20210920' }
       ],
       request: false // storage 한번만 요청
     }
