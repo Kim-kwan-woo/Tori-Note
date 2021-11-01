@@ -110,10 +110,17 @@ export default {
       $.ajax({
         type: 'GET',
         url: 'http://localhost:3000/timeline/images',
+        data: {
+          'id': this.fileID
+        },
         dataType: 'json',
+        async: false,
         success: function (data) {
           // this.timeline.push({imgURL: 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAABWoAAAM...', id: 'temp'})
-          this.timeline.push({imgURL: data[0].imgURL, id: data[0].id})
+          console.log(data)
+          for (var i = 0; i < data.length; i++) {
+            this.timeline[i] = {imgURL: data[i].imgURL + ',' + data[i].image, id: data[i].id}
+          }
         }.bind(this)
       }).catch(error => {
         console.log(error.message)
@@ -184,7 +191,7 @@ export default {
           canvas.width = video.videoWidth
           canvas.height = video.videoHeight
           canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
-          const imgBase64 = canvas.toDataURL('image/jpeg', 'image/octet-stream')
+          const imgBase64 = canvas.toDataURL('image/png', 'image/octet-stream')
           const decodImg = atob(imgBase64.split(',')[1])
           let array = []
           for (let i = 0; i < decodImg.length; i++) {
@@ -241,7 +248,7 @@ export default {
           canvas.width = video.videoWidth
           canvas.height = video.videoHeight
           canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
-          const imgBase64 = canvas.toDataURL('image/jpeg', 'image/octet-stream')
+          const imgBase64 = canvas.toDataURL('image/png', 'image/octet-stream')
           const decodImg = atob(imgBase64.split(',')[1])
           let array = []
           for (let i = 0; i < decodImg.length; i++) {

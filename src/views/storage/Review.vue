@@ -52,9 +52,10 @@
 <script lang="js">
 import html2pdf from 'html2pdf.js'
 import S3config from '../Key.js'
-import JQuery from 'jquery'
+// import JQuery from 'jquery'
+import axios from 'axios'
 
-let $ = JQuery
+// let $ = JQuery
 
 export default {
   name: 'Review',
@@ -70,12 +71,11 @@ export default {
     lecture_name: { type: String, default: '' },
     date: { type: String, default: '' }
   },
-  created () {
-  },
   computed: {
     orderItems: function () {
       if (this.request === false) {
         this.RequestItem()
+        console.log(this.items)
       }
       return this.items.slice().sort(function (a, b) {
         return a.start - b.start // start 기준으로 오름차순 정렬
@@ -84,30 +84,29 @@ export default {
   },
   methods: {
     RequestItem () {
-      $.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/storage/note',
-        data: {
-          'lecture_name': this.lecture_name,
-          'date': this.date
-        },
-        dataType: 'json',
-        success: function (data) {
-          for (var i = 0; i < data.length; i++) {
+      axios.get('http://localhost:3000/storage/note', {
+        params: {
+          lecture_name: this.lecture_name,
+          date: this.date
+        }
+      })
+        .then(function (data) {
+          for (var i = 0; i < data.data.length - 1; i++) {
             this.items.push({
-              imgURL: data[i].imgURL,
-              id: data[i].id,
-              start: data[i].start,
-              end: data[i].end,
-              script: data[i].script,
-              summary: data[i].summary
+              imgURL: data.data[i].imgURL + ',' + data.data[i].image,
+              id: data.data[i].id,
+              start: data.data[i].start,
+              end: data.data[i].end,
+              script: data.data[i].script,
+              summary: [ 'sentence1', 'sentence2', 'sentence3' ]
             })
           }
+          console.log(this.items.length)
           this.request = true
-        }.bind(this)
-      }).catch(error => {
-        console.log(error.message)
-      })
+        }.bind(this))
+        .catch(function (error) {
+          console.log(error)
+        })
     },
     setTimeoutPromise (ms) {
       return new Promise((resolve, reject) => {
