@@ -310,7 +310,14 @@ export default {
       this.Title = textarea.value
 
       var now = new Date()
-      this.curDate = now.getFullYear() + '' + (now.getMonth() + 1) + '' + now.getDate()
+      var syear = String(now.getFullYear())
+      var smonth = String((now.getMonth() + 1))
+      var sdate = String(now.getDate())
+      if (smonth.length === 1) smonth = '0' + smonth
+      if (sdate.length === 1) sdate = '0' + sdate
+
+      this.curDate = syear + '' + smonth + '' + sdate
+      console.log(this.curDate)
 
       this.fileID = Math.floor(Math.random() * 10000000)
 

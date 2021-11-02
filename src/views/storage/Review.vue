@@ -114,7 +114,7 @@ export default {
               start: data.data[i].start,
               end: data.data[i].end,
               script: data.data[i].script,
-              summary: ['zzzz', 'dddd', 'ddd']
+              summary: data.data[i].summary
             })
           }
           console.log(this.items.length)
