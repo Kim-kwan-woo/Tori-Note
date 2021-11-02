@@ -42,7 +42,7 @@
             <div style='position:absolute; top:25px; right:25px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
             <div class='col' style='padding-left:0px; padding-right:0px;'>
               <img id="scriptIMG" width='100%' src="" style='margin-right:2%;'>
-              <textarea id="script" class='scroll type1' rows='5' style='width:100%; border:none;'></textarea>
+              <textarea id="script" class='scroll type1' rows='7' style='width:100%; border:none;'></textarea>
             </div>
           </div>
         </div>
@@ -83,7 +83,7 @@ export default {
       $('body').toggleClass('pro-banner-collapse')
     },
     ShareScreen () {
-      this.sending_index = 0
+      this.sending_index = 1
       if (navigator.mediaDevices.getDisplayMedia && window.MediaRecorder !== undefined) {
         navigator.mediaDevices.getDisplayMedia({video: true, audio: true}).then(function (screenStream) {
           this.localstream = screenStream
@@ -148,6 +148,7 @@ export default {
       })
         .then(function (data) {
           console.log(data)
+          console.log(data.data)
           var textarea = document.querySelector('textarea#script')
           textarea.value = data.data
         })
@@ -288,12 +289,14 @@ export default {
       })
     },
     async OddrecordPer10s () {
+      console.log(this.sending_index)
       this.BtnRecordClicked()
       await this.setTimeoutPromise(59000)
       await this.BtnStopClicked()
       this.RequestImg()
     },
     async EvenrecordPer10s () {
+      console.log(this.sending_index)
       this.BtnRecordClicked_Even()
       await this.setTimeoutPromise(59000)
       await this.BtnStopClicked_Even()
