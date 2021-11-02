@@ -117,12 +117,12 @@ export default {
           console.log(data)
           // this.timeline.push({imgURL: 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAABWoAAAM...', id: 'temp'})
           for (var i = this.timeline.length; i < data.data.length; i++) {
-            console.log(data.data[i].imgURL)
-            console.log(data.data[i].image)
-            console.log(data.data[i].id)
+            console.log(data)
+            console.log(data.data[i].start)
             this.timeline.push({
               imgURL: data.data[i].imgURL + ',' + data.data[i].image,
-              id: data.data[i].id
+              id: data.data[i].id,
+              start: data.data[i].start
             })
           }
           console.log(this.timeline.length)
@@ -142,8 +142,8 @@ export default {
         params: {
           lecture_name: this.Title,
           date: this.curDate,
-          id: this.fileID + '_' + this.imgIndex,
-          start: this.imgIndex
+          id: this.timeline[this.imgIndex].id,
+          start: this.timeline[this.imgIndex].start
         }
       })
         .then(function (data) {
@@ -164,8 +164,8 @@ export default {
         data: {
           'lecture_name': this.Title,
           'date': this.curDate,
-          'id': this.fileID + '_' + this.imgIndex,
-          'start': this.imgIndex,
+          'id': this.timeline[this.imgIndex].id,
+          'start': this.timeline[this.imgIndex].start,
           'content': editScript
         },
         dataType: 'json'
