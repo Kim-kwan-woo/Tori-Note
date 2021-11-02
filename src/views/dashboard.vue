@@ -53,6 +53,7 @@
 
 <script lang="js">
 import JQuery from 'jquery'
+import axios from 'axios'
 
 let $ = JQuery
 
@@ -107,24 +108,28 @@ export default {
     // this.timeline.push({imgURL: 'https://img.insight.co.kr/static/2016/02/15/700/yy1275us791rlld79jxb.jpg', id: 'temp'})
     // },
     RequestImg () {
-      $.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/timeline/images',
-        data: {
-          'id': this.fileID
-        },
-        dataType: 'json',
-        async: false,
-        success: function (data) {
-          // this.timeline.push({imgURL: 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAABWoAAAM...', id: 'temp'})
-          console.log(data)
-          for (var i = 0; i < data.length; i++) {
-            this.timeline[i] = {imgURL: data[i].imgURL + ',' + data[i].image, id: data[i].id}
-          }
-        }.bind(this)
-      }).catch(error => {
-        console.log(error.message)
+      axios.get('http://localhost:3000/timeline/images', {
+        params: {
+          id: this.fileID
+        }
       })
+        .then(function (data) {
+          console.log(data)
+          // this.timeline.push({imgURL: 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAABWoAAAM...', id: 'temp'})
+          for (var i = this.timeline.length; i < data.data.length; i++) {
+            console.log(data.data[i].imgURL)
+            console.log(data.data[i].image)
+            console.log(data.data[i].id)
+            this.timeline.push({
+              imgURL: data.data[i].imgURL + ',' + data.data[i].image,
+              id: data.data[i].id
+            })
+          }
+          console.log(this.timeline.length)
+        }.bind(this))
+        .catch(function (error) {
+          console.log(error)
+        })
     },
     imgClicked (imgURL, index) {
       const scriptIMG = document.getElementById('scriptIMG')
@@ -132,23 +137,23 @@ export default {
 
       this.imgIndex = index
       console.log(index)
-      $.ajax({
-        type: 'GET',
-        url: 'http://localhost:3000/script/slide',
-        data: {
-          'lecture_name': this.Title,
-          'date': this.curDate,
-          'id': this.fileID + '_' + this.imgIndex,
-          'start': this.imgIndex
-        },
-        dataType: 'json',
-        success: function (data) {
-          var textarea = document.querySelector('textarea#script')
-          textarea.value = data
+
+      axios.get('http://localhost:3000/script/slide', {
+        params: {
+          lecture_name: this.Title,
+          date: this.curDate,
+          id: this.fileID + '_' + this.imgIndex,
+          start: this.imgIndex
         }
-      }).catch(error => {
-        console.log(error.message)
       })
+        .then(function (data) {
+          console.log(data)
+          var textarea = document.querySelector('textarea#script')
+          textarea.value = data.data
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     },
     editScript () {
       var textarea = document.querySelector('textarea#script')

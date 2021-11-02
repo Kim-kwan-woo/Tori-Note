@@ -6,7 +6,7 @@
           <div class="card-body">
             <ul v-for="(date, idx) of sortUniqueDate" :key="idx" >
               <h5>{{ date.substring(0, 4) }}.{{ date.substring(4, 6) }}.{{ date.substring(6, 8) }}.</h5>
-              <li v-for="item in orderItems" v-bind:key="item.lecture_name" v-if="date==item.date">
+              <li v-for="item of items" v-bind:key="item.lecture_name" v-if="date==item.date">
                 <div @click="showReview(item.lecture_name, item.date)"><i class="mdi mdi-note-text"></i> {{ item.lecture_name }} {{ item.date }}</div>
               </li>
               <br>
@@ -27,8 +27,8 @@ export default {
   name: 'MyStorage',
   data () {
     return {
-      items: [
-      ],
+      items: [],
+      tempUnique: [], // 요소 중복 제거
       request: false // storage 한번만 요청
     }
   },
@@ -55,7 +55,14 @@ export default {
         dataType: 'json',
         success: function (data) {
           for (var i = 0; i < data.length; i++) {
-            this.items.push({lecture_name: data[i].lecture_name, date: data[i].date})
+            if (!this.tempUnique.includes(data[i].lecture_name + ';' + data[i].date)) {
+              this.tempUnique.push(data[i].lecture_name + ';' + data[i].date)
+            }
+          }
+          for (var j = 0; j < this.tempUnique.length; j++) {
+            console.log(this.tempUnique[j])
+            var Split = this.tempUnique[j].split(';')
+            this.items.push({lecture_name: Split[0], date: Split[1]})
           }
           this.request = true
         }.bind(this)
