@@ -194,8 +194,10 @@ export default {
         this.mediaRecorder.onstop = async function () {
           const video = document.querySelector('video') // 여기부터
           const canvas = window.canvas = document.querySelector('canvas')
-          canvas.width = video.videoWidth
-          canvas.height = video.videoHeight
+          // canvas.width = video.videoWidth
+          // canvas.height = video.videoHeight
+          canvas.width = 1528
+          canvas.height = 682
           canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
           const imgBase64 = canvas.toDataURL('image/png', 'image/octet-stream')
           const decodImg = atob(imgBase64.split(',')[1])
@@ -251,8 +253,10 @@ export default {
         this.mediaRecorder_Even.onstop = async function () {
           const video = document.querySelector('video') // 여기부터
           const canvas = window.canvas = document.querySelector('canvas')
-          canvas.width = video.videoWidth
-          canvas.height = video.videoHeight
+          // canvas.width = video.videoWidth
+          // canvas.height = video.videoHeight
+          canvas.width = 1528
+          canvas.height = 682
           canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
           const imgBase64 = canvas.toDataURL('image/png', 'image/octet-stream')
           const decodImg = atob(imgBase64.split(',')[1])
