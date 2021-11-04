@@ -18,6 +18,6 @@ export default {
 
 <style scoped lang="scss">
 .app-footer {
-
+  z-index:1;
 }
 </style>

@@ -1,8 +1,19 @@
 <template lang="html">
   <section class="Review">
-    <div style='position:absolute; top:90px; right:30px;'><b-button class="btn-fw btn-inverse-light" @click="exportToPDF"><i class="mdi mdi-download"></i>PDF</b-button></div>
+    <div style='position:absolute; top:90px; right:30px; z-index:1;'><b-button class="btn-fw btn-inverse-light" @click="exportToPDF"><i class="mdi mdi-download"></i>PDF</b-button></div>
     <div ref="pdfarea">
-      <h3>{{ lecture_name }} {{ date }}</h3>
+      <div class="row" style="height:100%; margin-top:40px;">
+        <div class="col" style="height:100%;">
+          <div class="nanumgothic" style="width:40%; height:100%; float:left; font-family: 'Nanum Gothic', sans-serif;">
+            <h2>{{ lecture_name }} {{ date }}</h2>
+          </div>
+          <div style="width:60%; height:100%; float:right; margin-top:10px;">
+            <span v-for="(keyword, idx) in keyword_array" v-bind:key="idx" style="float:right;">
+              <b-button class="btn-fw btn-link btn-rounded">{{ keyword }}</b-button>&nbsp;&nbsp;&nbsp;
+            </span>
+          </div>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-12 grid-margin">
           <div class="card" v-for="(item, index) in orderItems" v-bind:key="item.start" style="margin-bottom:25px;">
@@ -62,9 +73,27 @@ export default {
   data () {
     return {
       items: [
+        {
+          imgURL: 'https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg',
+          id: 'audio_',
+          start: 0,
+          end: '2',
+          script: '발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근',
+          summary: [ 'sentence1', 'sentence2', 'sentence3' ]
+        },
+        {
+          imgURL: 'https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg',
+          id: 'audio_',
+          start: 3,
+          end: '3',
+          script: '발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근',
+          summary: [ 'sentence1', 'sentence2', 'sentence3' ]
+        }
       ],
       request: false, // storage 한번만 요청
-      mp3Arr: null
+      mp3Arr: null,
+      global_id: {},
+      keyword_array: ['빅데이터', 'DNA', '오바마', '페이스북', '분석', '활용']
     }
   },
   props: {
@@ -98,6 +127,19 @@ export default {
         console.log(error.message)
       })
     },
+    RequestKeyword () {
+      axios.get('http://localhost:3000/keyword', {
+        params: {
+          id: this.global_id
+        }
+      })
+        .then(function (data) {
+          console.log(data)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
     RequestItem () {
       axios.get('http://localhost:3000/storage/note', {
         params: {
@@ -108,6 +150,7 @@ export default {
         .then(function (data) {
           for (var i = 0; i < data.data.length - 1; i++) {
             console.log(data.data[i])
+            this.global_id = data.data[i].id
             this.items.push({
               imgURL: data.data[i].imgURL + ',' + data.data[i].image,
               id: data.data[i].id,
@@ -130,6 +173,7 @@ export default {
       })
     },
     async exportToPDF () {
+      console.log('pdf 생성 시작')
       const textarea = document.getElementsByTagName('textarea')
       for (let i = 0; i < textarea.length; i++) {
         textarea[i].style.height = '1px'
@@ -235,6 +279,11 @@ textarea { resize: none; }
 }
 @keyframes bounce_frames {
   from {transform: translate3d(0, 0, 0);}
-  to {transform: translate3d(0, 50px, 0);}
+  to {transform: translate3d(0, -20px, 0);}
+}
+
+.nanumgothic * {
+ font-family: 'Nanum Gothic', sans-serif;
+ font-weight: 600;
 }
 </style>

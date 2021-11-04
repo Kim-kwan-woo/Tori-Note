@@ -97,5 +97,6 @@ export default {
 
 <style scoped lang="scss">
 .app-sidebar {
+  z-index:1;
 }
 </style>

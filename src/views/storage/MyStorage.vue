@@ -1,19 +1,20 @@
 <template lang="html">
   <section class="myPdfFiles">
     <div class="row">
-      <div class="col-md-12 grid-margin">
-        <div class="card">
-          <div class="card-body">
-            <ul v-for="(date, idx) of sortUniqueDate" :key="idx" >
-              <h5>{{ date.substring(0, 4) }}.{{ date.substring(4, 6) }}.{{ date.substring(6, 8) }}.</h5>
-              <li v-for="item of items" v-bind:key="item.lecture_name" v-if="date==item.date">
-                <div @click="showReview(item.lecture_name, item.date)"><i class="mdi mdi-note-text"></i> {{ item.lecture_name }} {{ item.date }}</div>
-              </li>
-              <br>
-            </ul>
+        <div class='col-md-3 grid-margin stretch-card' v-for="item of items" v-bind:key="item.lecture_name">
+          <div class='zoom card nanumgothic' @click="showReview(item.lecture_name, item.date)">
+            <div class='card-body' style="padding:0;">
+              <img style="margin-bottom:15px;" width='100%' height='60%' src='https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg'>
+              <div style="padding-left:15px; padding-right:15px;">
+              <div style="text-align:center;"><h4>{{ item.lecture_name }}</h4></div>
+              {{ item.date.substring(0, 4) }}.{{ item.date.substring(4, 6) }}.{{ item.date.substring(6, 8) }}.<br/>
+              <span v-for="(keyword, idx) in keyword_array" v-bind:key="idx">
+                #{{ keyword }}&nbsp;
+              </span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
     </div>
   </section>
 </template>
@@ -27,9 +28,17 @@ export default {
   name: 'MyStorage',
   data () {
     return {
-      items: [],
+      items: [
+        { lecture_name: '프로그래밍언어개념', date: '20210920' },
+        { lecture_name: '운영체제', date: '20210920' },
+        { lecture_name: '컴퓨터네트워크', date: '20210918' },
+        { lecture_name: '컴퓨터네트워크', date: '20210920' },
+        { lecture_name: '모바일컴퓨팅', date: '20210919' },
+        { lecture_name: '프로그래밍언어개념', date: '20210920' }
+      ],
       tempUnique: [], // 요소 중복 제거
-      request: false // storage 한번만 요청
+      request: false, // storage 한번만 요청
+      keyword_array: ['빅데이터', 'DNA', '오바마']
     }
   },
   computed: {
@@ -89,5 +98,19 @@ export default {
     border: solid 1px rgb(223, 223, 223); margin-bottom: 5px;
     .card1-title { color: black; }
     .card1-header { background: black; }
+}
+
+.nanumgothic * {
+ font-family: 'Nanum Gothic', sans-serif;
+ font-weight: 500;
+}
+
+.zoom {
+  transition: transform .2s; /* Animation */
+}
+
+.zoom:hover {
+  transform: scale(1.1); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+  z-index: 1;
 }
 </style>
