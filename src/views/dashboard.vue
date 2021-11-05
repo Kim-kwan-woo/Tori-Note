@@ -9,18 +9,18 @@
       <div class='col grid-margin stretch-card' style="background:#222;">
         <div style="width:107%; height:200%; position:absolute; top:-50px; left:-48px; background:#222;">
         </div>
-        <div class='card' style="margin:0; background:#222; box-shadow:none; border:solid 0px;">
+        <div class='card' style="text-align:center; margin:0; background:#222; box-shadow:none; border:solid 0px;">
           <div class='card-body' style="padding:0; background:#222;">
             <h4 class='card-title mb-0' style="background:#222;">Video</h4>
-            <div v-if="Record" style='position:absolute; bottom:-25px; right:135px;'><b-button class="btn-fw btn-inverse-light" @click="StopPer10s"><i class="mdi mdi-stop"></i>Stop</b-button></div>
-            <div v-else style='position:absolute; bottom:-25px; right:135px;'><b-button class="btn-fw btn-inverse-light" @click="ShowPopTitle"><i class="mdi mdi-step-forward"></i>Start</b-button></div>
-            <div style='position:absolute; bottom:-25px; right:0;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
-            <video ref="videoElement" controls autoplay></video><br/>
+            <div v-if="Record" style='position:absolute; bottom:-30px; right:135px;'><b-button class="btn-fw btn-inverse-light" @click="StopPer10s"><i class="mdi mdi-stop"></i>Stop</b-button></div>
+            <div v-else style='position:absolute; bottom:-30px; right:135px;'><b-button class="btn-fw btn-inverse-light" @click="ShowPopTitle"><i class="mdi mdi-step-forward"></i>Start</b-button></div>
+            <div style='position:absolute; bottom:-30px; right:0;'><b-button class="btn-fw btn-inverse-light" @click="ShareScreen"><i class="mdi mdi-desktop-mac"></i>Share</b-button></div><br/>
+            <video ref="videoElement" controls autoplay style="margin-left:-23px;"></video><br/>
             <canvas></canvas>
           </div>
         </div>
       </div>
-      <div class='col-md-5 grid-margin stretch-card'>
+      <div class='col-md-5 grid-margin stretch-card' style="margin-left:10px;">
         <div class='card' style="box-shadow:none; border:solid 0px; height:100%; margin-top:-24px;">
           <div class='card-body' style="padding:0;">
             <div class='col' style='padding-left:0px; padding-right:0px; padding-bottom:0px;'>
@@ -29,7 +29,7 @@
             </div>
           </div>
         </div>
-        <div style='position:absolute; bottom:-25px; right:15px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+        <div style='position:absolute; bottom:-30px; right:15px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
       </div>
       <div v-show="Time_Line" class='col-md-1 grid-margin stretch-card timelineDiv' id='timeline'>
         <div class='card' style="box-shadow:none; margin-top:-24px;">
@@ -38,7 +38,7 @@
               <div v-for="(item, index) of timeline" v-bind:key='item' class='card1' style='border: solid 1px rgb(255, 255, 255);'>
                 <div class='card-body' style='padding:0px;'>
                   <div class='row'>
-                  <img width='100%' height='100%' v-bind:src='item.imgURL' @click="imgClicked(item.imgURL, index)">
+                  <img width='100%' height='100%' v-bind:src='item.imgURL' @click="imgClicked(item.imgURL, index)" style="margin-bottom:0px;">
                   </div>
                 </div>
               </div>
@@ -62,6 +62,7 @@ export default {
   data () {
     return {
       timeline: [
+        {imgURL: 'https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg', id: 'temp'}
       ],
       StopPer10: false, // true면 녹화 중지
       Record: false, // true면 녹화 시작
@@ -365,7 +366,7 @@ export default {
 }
 .left-box { width:55%; height:90%; float:left; box-sizing:border-box; }
 .right-box { width:45%; height:90%; float:right; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; text-align:left; }
-video { background:#222; width:100%; height:430px; }
+video { background:#222; width:105%; height:430px; }
 canvas { display:none; visibility:hidden; }
 #popPosition {padding:3%; text-align:center; background-color:#fff; border:solid 1px rgb(223, 223, 223); border-radius:10px 10px 10px 10px; position:absolute; height:210px; width:400px; margin:-105px 0px 0px -200px; top:50%; left:50%; z-index:1; display:none;}
 </style>

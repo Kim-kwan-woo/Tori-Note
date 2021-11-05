@@ -1,20 +1,29 @@
 <template lang="html">
   <section class="myPdfFiles">
     <div class="row">
-        <div class='col-md-3 grid-margin stretch-card' v-for="item of items" v-bind:key="item.lecture_name">
-          <div class='zoom card nanumgothic' @click="showReview(item.lecture_name, item.date)">
-            <div class='card-body' style="padding:0;">
-              <img style="margin-bottom:15px;" width='100%' height='60%' src='https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg'>
-              <div style="padding-left:15px; padding-right:15px;">
-              <div style="text-align:center;"><h4>{{ item.lecture_name }}</h4></div>
-              {{ item.date.substring(0, 4) }}.{{ item.date.substring(4, 6) }}.{{ item.date.substring(6, 8) }}.<br/>
-              <span v-for="(keyword, idx) in keyword_array" v-bind:key="idx">
-                #{{ keyword }}&nbsp;
-              </span>
+      <div v-for="(date, idx) of sortUniqueDate" :key="idx">
+        <div calss="row">
+          <div>
+            <h3>{{ date.substring(0, 4) }}.{{ date.substring(4, 6) }}.{{ date.substring(6, 8) }}.</h3>
+          </div>
+          <div class='grid-margin stretch-card row'>
+            <div class='col-md-3 grid-margin stretch-card' v-for="item of items" v-bind:key="item.lecture_name" v-if="date==item.date">
+              <div class='zoom card nanumgothic' @click="showReview(item.lecture_name, item.date)">
+                <div class='card-body' style="padding:0;">
+                  <img style="margin-bottom:15px;" width='100%' height='60%' src='https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg'>
+                  <div style="padding-left:15px; padding-right:15px;">
+                    <div style="text-align:center;"><h4>{{ item.lecture_name }}</h4></div>
+                    {{ item.date.substring(0, 4) }}.{{ item.date.substring(4, 6) }}.{{ item.date.substring(6, 8) }}.<br/>
+                    <span v-for="(keyword, idx) in keyword_array" v-bind:key="idx">
+                      #{{ keyword }}&nbsp;
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
     </div>
   </section>
 </template>
@@ -34,7 +43,10 @@ export default {
         { lecture_name: '컴퓨터네트워크', date: '20210918' },
         { lecture_name: '컴퓨터네트워크', date: '20210920' },
         { lecture_name: '모바일컴퓨팅', date: '20210919' },
-        { lecture_name: '프로그래밍언어개념', date: '20210920' }
+        { lecture_name: '프로그래밍언어개념', date: '20210920' },
+        { lecture_name: '프로그래밍언어개념', date: '20210920' },
+        { lecture_name: '운영체제', date: '20210920' },
+        { lecture_name: '컴퓨터네트워크', date: '20210918' }
       ],
       tempUnique: [], // 요소 중복 제거
       request: false, // storage 한번만 요청

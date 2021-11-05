@@ -3,6 +3,9 @@
     <div style='position:absolute; top:90px; right:30px; z-index:1;'><b-button class="btn-fw btn-inverse-light" @click="exportToPDF"><i class="mdi mdi-download"></i>PDF</b-button></div>
     <div ref="pdfarea">
       <div class="row" style="height:100%; margin-top:40px;">
+        <div id="torilogo" style="width:100%; display:none; text-align:center; margin-bottom:10px;">
+          <img width="30%" height="100%" src="../../assets/images/tori-logo-black.png">
+        </div>
         <div class="col" style="height:100%;">
           <div class="nanumgothic" style="width:40%; height:100%; float:left; font-family: 'Nanum Gothic', sans-serif;">
             <h2>{{ lecture_name }} {{ date }}</h2>
@@ -188,6 +191,9 @@ export default {
         loadbtn[i].style.display = 'none'
       }
 
+      const logodiv = document.getElementById('torilogo')
+      logodiv.style.display = 'block'
+
       html2pdf(this.$refs.pdfarea, {
         margin: 0,
         filename: this.lecture_name + '_' + this.date + '.pdf',
@@ -207,6 +213,7 @@ export default {
         editScr[i].style.display = 'block'
         loadbtn[i].style.display = 'block'
       }
+      logodiv.style.display = 'none'
     },
     loadAudio (S3, params) {
       return new Promise((resolve, reject) => {
