@@ -344,7 +344,22 @@ export default {
       this.StopPer10 = true
       await this.BtnStopClicked()
       await this.BtnStopClicked_Even()
-      this.CaptureScreen()
+      $.ajax({
+        type: 'POST',
+        url: 'http://localhost:3000/keyword',
+        contentType: 'application/json',
+        data: {
+          'id': this.fileID,
+          'lecture_name': this.Title,
+          'date': this.curDate
+        },
+        dataType: 'json',
+        success: function (data) {
+          console.log(data)
+        }
+      }).catch(error => {
+        console.log(error.message)
+      })
     },
     ShowPopTitle () {
       const pop = document.getElementById('popPosition')
