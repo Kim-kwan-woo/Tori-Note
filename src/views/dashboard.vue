@@ -62,7 +62,6 @@ export default {
   data () {
     return {
       timeline: [
-        {imgURL: 'https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg', id: 'temp'}
       ],
       StopPer10: false, // true면 녹화 중지
       Record: false, // true면 녹화 시작
@@ -342,12 +341,17 @@ export default {
     async StopPer10s () {
       this.Record = false
       this.StopPer10 = true
-      await this.BtnStopClicked()
-      await this.BtnStopClicked_Even()
+
+      if (this.mediaRecorder.state === 'recording') {
+        await this.BtnStopClicked()
+      }
+      if (this.mediaRecorder_Even.state === 'recording') {
+        await this.BtnStopClicked_Even()
+      }
+
       $.ajax({
         type: 'POST',
         url: 'http://localhost:3000/keyword',
-        contentType: 'application/json',
         data: {
           'id': this.fileID,
           'lecture_name': this.Title,
