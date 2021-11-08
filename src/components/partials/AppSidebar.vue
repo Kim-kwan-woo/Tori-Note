@@ -2,7 +2,7 @@
   <section class="app-sidebar">
     <nav class="sidebar sidebar-offcanvas" id="sidebar">
       <ul class="nav">
-        <li class="nav-item nav-profile">
+        <li class="nav-item nav-profile" style="margin-top:110px;">
           <a href="#" class="nav-link">
             <div class="profile-image">
               <img class="img-xs rounded-circle" src="https://avatars.githubusercontent.com/u/5829095?v=4" alt="profile image">

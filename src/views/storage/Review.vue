@@ -3,8 +3,8 @@
     <div style='position:absolute; top:90px; right:30px; z-index:1;'><b-button class="btn-fw btn-inverse-light" @click="exportToPDF"><i class="mdi mdi-download"></i>PDF</b-button></div>
     <div ref="pdfarea">
       <div class="row" style="height:100%; margin-top:40px;">
-        <div id="torilogo" style="width:100%; display:none; text-align:center; margin-bottom:10px;">
-          <img width="30%" height="100%" src="../../assets/images/tori-logo-black.png">
+        <div id="torilogo" style="width:100%; display:none; text-align:center; margin-bottom:20px;">
+          <img width="30%" height="100%" src="../../assets/images/tori-logo-blue.png">
         </div>
         <div class="col" style="height:100%;">
           <div class="nanumgothic" style="width:40%; height:100%; float:left; font-family: 'Nanum Gothic', sans-serif;">
@@ -73,6 +73,22 @@ export default {
   data () {
     return {
       items: [
+        {
+          imgURL: 'https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg',
+          id: 'audio_',
+          start: 0,
+          end: '2',
+          script: '발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근',
+          summary: [ 'sentence1', 'sentence2', 'sentence3' ]
+        },
+        {
+          imgURL: 'https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg',
+          id: 'audio_',
+          start: 3,
+          end: '3',
+          script: '발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근 발달해 있음을 알 수 있겠죠. 뿐만 아니라 여러분들 여기에 또 이제 굉장히그 유려한 문체를 볼 수 있는 근거가 하나 있는데 그 근',
+          summary: [ 'sentence1', 'sentence2', 'sentence3' ]
+        }
       ],
       request: false, // storage 한번만 요청
       mp3Arr: null,
