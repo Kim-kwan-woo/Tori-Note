@@ -15,7 +15,7 @@
                     <div style="text-align:center;"><h4>{{ item.lecture_name }}</h4></div>
                     {{ item.date.substring(0, 4) }}.{{ item.date.substring(4, 6) }}.{{ item.date.substring(6, 8) }}.<br/>
                     <span v-for="(keyword, idx) in item.keyword" v-bind:key="idx">
-                      <span v-if="idx < 3">#{{ keyword }}&nbsp; </span>
+                      <span v-if="idx < 4">#{{ keyword }}&nbsp; </span>
                       <span v-else></span>
                     </span>
                   </div>
@@ -39,8 +39,6 @@ export default {
   data () {
     return {
       items: [
-        { lecture_name: '프로그래밍언어개념', date: '20210920', image: 'https://media.vlpt.us/images/hyacinta/post/b66d1d8b-78ab-4b4d-9867-090edf9aeb00/developmentSummary.jpg', keyword: ['빅데이터', 'DNA', '오바마', '빅데이터', 'DNA', '오바마'] },
-        { lecture_name: '운영체제', date: '20210920', image: 'https://img.insight.co.kr/static/2019/05/10/700/8jzss2gl2l222u3708x9.jpg', keyword: ['빅데이터', 'DNA', '오바마', '빅데이터', 'DNA', '오바마'] }
       ],
       tempUnique: [], // 요소 중복 제거
       request: false // storage 한번만 요청
