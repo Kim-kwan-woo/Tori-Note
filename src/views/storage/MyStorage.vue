@@ -15,7 +15,7 @@
                     <div style="text-align:center;"><h4>{{ item.lecture_name }}</h4></div>
                     {{ item.date.substring(0, 4) }}.{{ item.date.substring(4, 6) }}.{{ item.date.substring(6, 8) }}.<br/>
                     <span v-for="(keyword, idx) in item.keyword" v-bind:key="idx">
-                      <span v-if="idx < 4">#{{ keyword }}&nbsp; </span>
+                      <span v-if="idx < 3">#{{ keyword }}&nbsp; </span>
                       <span v-else></span>
                     </span>
                   </div>

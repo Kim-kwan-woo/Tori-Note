@@ -29,7 +29,7 @@
             </div>
           </div>
         </div>
-        <div style='position:absolute; bottom:-30px; right:15px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+        <div style='position:absolute; bottom:-30px; right:15px;'><b-button class="btn-fw btn-inverse-light" @click="editScript"><i class="mdi mdi-border-color"></i>Save</b-button></div>
       </div>
       <div v-show="Time_Line" class='col-md-1 grid-margin stretch-card timelineDiv' id='timeline'>
         <div class='card' style="box-shadow:none; margin-top:-24px;">

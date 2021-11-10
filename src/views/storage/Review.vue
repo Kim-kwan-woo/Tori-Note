@@ -30,7 +30,7 @@
                       <div v-bind:id='index + 1000' @click="playAudio(index, item.id, item.start, item.end)" name="loadbtn" style='position:absolute; bottom:22px; left:31px; z-index:1; display:block'>▶</div>
                     </div>
                     <div class="col-md-7" style="float:right;">
-                      <div style='position:absolute; top:0px; right:10px;'><b-button name="editSum" class="btn-fw btn-inverse-light" @click="editSummary(index)"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+                      <div style='position:absolute; top:0px; right:10px;'><b-button name="editSum" class="btn-fw btn-inverse-light" @click="editSummary(index)"><i class="mdi mdi-border-color"></i>Save</b-button></div>
                       <h4 class='card-title mb-0' id="Pscript">Summary</h4><br/>
                       <div id="summary" class="editable scroll type1" contenteditable="true" style='width:100%; border:none;'>
                         <div v-if="item.summary[0] === 'NO SUMMARY'" style="text-align:center;">
@@ -49,7 +49,7 @@
                   </div>
                 </div>
                 <div class="col-md-12">
-                  <div style='position:absolute; top:0px; right:10px;'><b-button name="editScr" class="btn-fw btn-inverse-light" @click="editScript(index)"><i class="mdi mdi-border-color"></i>Edit</b-button></div>
+                  <div style='position:absolute; top:0px; right:10px;'><b-button name="editScr" class="btn-fw btn-inverse-light" @click="editScript(index)"><i class="mdi mdi-border-color"></i>Save</b-button></div>
                   <h4 class='card-title mb-0' id="Pscript">Script</h4><br/>
                   <textarea v-model="item.script" id="script" name="script" class='scroll type1' style='height:180px; width:100%; border:none;'>
                   </textarea>
